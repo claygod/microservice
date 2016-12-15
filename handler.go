@@ -1,8 +1,8 @@
+package main
+
 // Microservice
 // Handler
 // Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
-
-package main
 
 import "net/http"
 

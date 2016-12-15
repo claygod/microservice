@@ -14,16 +14,19 @@ type Config struct {
 	Error  Error
 }
 
+// Main - basic configuration
 type Main struct {
 	Port string
 }
 
+// Status - types of statuses
 type Status struct {
 	Ok       string
 	NotFound string
 	Timeout  string
 }
 
+// Error - types of errors
 type Error struct {
 	FileNotFound string
 }

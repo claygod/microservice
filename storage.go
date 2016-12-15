@@ -17,10 +17,9 @@ func NewStorage(conf *Tuner) *Storage {
 	return s
 }
 
-/*
-Storage structure
-It creates and stores objects
-*/
+// Storage structure
+//It creates and stores objects
+//
 type Storage struct {
 	Logger Logger
 	Metric Metric

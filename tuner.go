@@ -34,18 +34,17 @@ func NewTuner(path string) (*Tuner, error) {
 	return s, nil
 }
 
-/* Tuner structure
-Configuring using the configuration file, environment variables, and command-line variables.
-The default configuration is loaded from the specified file ( `config.toml`).
-The configuration file can be changed from the command line like this:
-
-	`yourservice confile=config.toml`
-
-If the operating system environment variables are set up, they have a higher priority than variables from the configuration file. Command line parameters are most important priority. To change a parameter in the command line you need to specify its name in the form of a section name and parameter name (with capital letters!). Here is an example to change the port:
-
-	'yourservice Main/Port=:85`
-
-*/
+// Tuner structure
+//Configuring using the configuration file, environment variables, and command-line variables.
+//The default configuration is loaded from the specified file ( `config.toml`).
+//The configuration file can be changed from the command line like this:
+//
+//	`yourservice confile=config.toml`
+//
+//If the operating system environment variables are set up, they have a higher priority than variables from the configuration file. Command line //parameters are most important priority. To change a parameter in the command line you need to specify its name in the form of a section name and //parameter name (with capital letters!). Here is an example to change the port:
+//
+//	'yourservice Main/Port=:85`
+//
 type Tuner struct {
 	Config
 }

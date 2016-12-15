@@ -24,7 +24,7 @@ type Metric struct {
 }
 
 // Start - fix a starting time
-func (g *Metric) Start(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request, bool) {
+func (m *Metric) Start(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request, bool) {
 	ctx := req.Context()
 	ctx = context.WithValue(ctx, "timeStart", int(time.Now().UnixNano()))
 	req = req.WithContext(ctx)
@@ -32,9 +32,9 @@ func (g *Metric) Start(w http.ResponseWriter, req *http.Request) (http.ResponseW
 }
 
 // End - sending metrics on the duration
-func (g *Metric) End(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request, bool) {
+func (m *Metric) End(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request, bool) {
 	timeStart := req.Context().Value("timeStart").(int)
-	go g.send(map[string]interface{}{"duration": int(time.Now().UnixNano()) - timeStart})
+	go m.send(map[string]interface{}{"duration": int(time.Now().UnixNano()) - timeStart})
 	return w, req, true
 }
 

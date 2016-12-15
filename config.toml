@@ -1,0 +1,17 @@
+# Microservice
+# Configuration file. 
+# Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+# 
+# When you change the structure of the configuration file,
+# make sure the same changes need to be made to `setting.go`
+
+[Main]
+Port = ":81"
+
+[Status]
+Ok			= "200"
+NotFound	= "404"
+Timeout		= "504"
+
+[Error]
+FileNotFound	= "File not found"

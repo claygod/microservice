@@ -6,9 +6,7 @@ package main
 // Main
 // Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
-import (
-	"github.com/claygod/Bxog"
-)
+import "github.com/claygod/Bxog"
 
 // Main
 func main() {
@@ -16,14 +14,18 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	//store := NewStorage(conf)
+	store := NewStorage(conf)
 
 	hr := NewHandler(conf)
-	h := hr.Handle(hr.Test).
-		Before(hr.Store.Metric.Start).
-		After(hr.Store.Metric.End)
+
+	hello := hr.Queue(
+		store.Metric.Start,
+		store.Session.Check,
+		hr.HelloWorld,
+		store.Metric.End,
+	)
 
 	m := bxog.New()
-	m.Add("/:id", h.Run)
+	m.Add("/", hello.Run)
 	m.Start(conf.Main.Port)
 }

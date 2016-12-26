@@ -3,15 +3,12 @@
 # Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 # 
 # When you change the structure of the configuration file,
-# make sure the same changes need to be made to `setting.go`
+# make sure the same changes need to be made to `config.go`
 
 [Main]
-Port = ":81"
+Port = ":80"
+Name = "Microservice"
 
-[Status]
-Ok			= "200"
-NotFound	= "404"
-Timeout		= "504"
-
-[Error]
-FileNotFound	= "File not found"
+[Session]
+Secure	= "something-very-secret"
+Name	= "session-name"

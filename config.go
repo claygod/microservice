@@ -7,26 +7,19 @@ package main
 //Config structure
 //When you change the structure of the `Config`, make
 //sure the same changes need to be made to `config.toml`
-//
 type Config struct {
-	Main   Main
-	Status Status
-	Error  Error
+	Main    ConfMain
+	Session ConfSession
 }
 
 // Main - basic configuration
-type Main struct {
+type ConfMain struct {
 	Port string
+	Name string
 }
 
-// Status - types of statuses
-type Status struct {
-	Ok       string
-	NotFound string
-	Timeout  string
-}
-
-// Error - types of errors
-type Error struct {
-	FileNotFound string
+// Session parameters
+type ConfSession struct {
+	Secure string
+	Name   string
 }

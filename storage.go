@@ -4,23 +4,22 @@ package main
 // Storage
 // Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
-//import "fmt"
+import "github.com/claygod/microservice/tools"
 
 // NewStorage - create a new Storage
 func NewStorage(conf *Tuner) *Storage {
-	logger := *NewLogger()
-	metric := *NewMetric(&logger)
+	metric := *tools.NewMetric()
+	session := *tools.NewSession(conf.Session.Secure, conf.Session.Name)
 	s := &Storage{
-		Logger: logger,
-		Metric: metric,
+		Metric:  metric,
+		Session: session,
 	}
 	return s
 }
 
 // Storage structure
-//It creates and stores objects
-//
+// It creates and stores objects
 type Storage struct {
-	Logger Logger
-	Metric Metric
+	Metric  tools.Metric
+	Session tools.Session
 }

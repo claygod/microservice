@@ -8,7 +8,7 @@ import "net/http"
 
 // NewQueue - create a new Queue
 func NewQueue(args []func(http.ResponseWriter, *http.Request) (http.ResponseWriter, *http.Request)) *Queue {
-	q := &Queue{} // executor: f
+	q := &Queue{}
 	for _, f := range args {
 		q.list = append(q.list, f)
 	}
@@ -23,10 +23,7 @@ type Queue struct {
 // Run - launch handler's queue
 func (q *Queue) Run(w http.ResponseWriter, req *http.Request) {
 	for _, f := range q.list {
-		if w2, req2 := f(w, req); req2 != nil {
-			w = w2
-			req = req2
-		} else {
+		if w, req = f(w, req); req == nil {
 			return
 		}
 	}

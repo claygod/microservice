@@ -12,13 +12,13 @@ type Config struct {
 	Session ConfSession
 }
 
-// Main - basic configuration
+// ConfMain - basic configuration
 type ConfMain struct {
 	Port string
 	Name string
 }
 
-// Session parameters
+// ConfSession parameters
 type ConfSession struct {
 	Secure string
 	Name   string

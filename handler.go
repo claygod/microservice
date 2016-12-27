@@ -23,7 +23,7 @@ type Handler struct {
 	Log  *logrus.Logger
 }
 
-// Queue( - create the queue to the handler
+// Queue( - create the new queue to the handler
 func (h *Handler) Queue(args ...func(http.ResponseWriter, *http.Request) (http.ResponseWriter, *http.Request)) *Queue {
 	x := NewQueue(args)
 	return x
@@ -35,7 +35,7 @@ func (h *Handler) HelloWorld(w http.ResponseWriter, req *http.Request) (http.Res
 		w.Header().Del("Content-Type")
 		w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 		w.Write([]byte(fmt.Sprintf("Hello %s!", h.Conf.Main.Name)))
-		h.Log.Infof("log=%s hello=%s", "demo", "world")
+		go h.Log.WithField("hello", "world").Info("Demo of logging")
 	}
 	return w, req
 }

@@ -23,7 +23,7 @@ type Handler struct {
 	Log  *logrus.Logger
 }
 
-// Queue( - create the new queue to the handler
+// Queue - create the new queue to the handler
 func (h *Handler) Queue(args ...func(http.ResponseWriter, *http.Request) (http.ResponseWriter, *http.Request)) *Queue {
 	x := NewQueue(args)
 	return x

@@ -8,18 +8,20 @@ import (
 	"context"
 	"net/http"
 	"time"
+
+	"github.com/Sirupsen/logrus"
 )
 
 // NewMetric - create a new Metric
 func NewMetric() *Metric {
-	m := &Metric{logger: NewLogger()}
+	m := &Metric{logger: logrus.New()}
 	return m
 }
 
 // Metric structure
 // This library shows a simple version of the logging duration metrics
 type Metric struct {
-	logger *Logger
+	logger *logrus.Logger
 }
 
 // Start - fix a starting time
@@ -36,15 +38,7 @@ func (m *Metric) Start(w http.ResponseWriter, req *http.Request) (http.ResponseW
 func (m *Metric) End(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
 	if req != nil {
 		timeStart := req.Context().Value("timeStart").(int)
-		go m.send(map[string]interface{}{"duration": int(time.Now().UnixNano()) - timeStart})
+		go m.logger.WithField("duration", int(time.Now().UnixNano())-timeStart).Print("Demo if metric")
 	}
 	return w, req
-}
-
-func (m *Metric) send(fields map[string]interface{}) {
-	msg := m.logger.Message()
-	for k, v := range fields {
-		msg.Field(k, v)
-	}
-	msg.Send()
 }

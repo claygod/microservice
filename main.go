@@ -27,5 +27,5 @@ func main() {
 
 	m := bxog.New()
 	m.Add("/", hello.Run)
-	m.Start(conf.Main.Port)
+	m.Start(":" + conf.Main.Port)
 }

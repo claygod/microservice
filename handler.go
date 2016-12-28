@@ -7,6 +7,7 @@ package main
 import "fmt"
 import "net/http"
 import "github.com/Sirupsen/logrus"
+import "context"
 
 // NewHandler - create a new Handler
 func NewHandler(conf *Tuner) *Handler {
@@ -35,7 +36,12 @@ func (h *Handler) HelloWorld(w http.ResponseWriter, req *http.Request) (http.Res
 		w.Header().Del("Content-Type")
 		w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 		w.Write([]byte(fmt.Sprintf("Hello %s!", h.Conf.Main.Name)))
-		go h.Log.WithField("hello", "world").Info("Demo of logging")
+		// for test
+		ctx := req.Context()
+		ctx = context.WithValue(ctx, "Test", "Test")
+		req = req.WithContext(ctx)
+		// demo log
+		// go h.Log.WithField("hello", h.Conf.Main.Name).Info("Demo of logging")
 	}
 	return w, req
 }

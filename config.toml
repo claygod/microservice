@@ -6,7 +6,7 @@
 # make sure the same changes need to be made to `config.go`
 
 [Main]
-Port = ":80"
+Port = "80"
 Name = "Microservice"
 
 [Session]

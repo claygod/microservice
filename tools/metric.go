@@ -38,7 +38,7 @@ func (m *Metric) Start(w http.ResponseWriter, req *http.Request) (http.ResponseW
 func (m *Metric) End(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
 	if req != nil {
 		timeStart := req.Context().Value("timeStart").(int)
-		go m.logger.WithField("duration", int(time.Now().UnixNano())-timeStart).Print("Demo if metric")
+		go m.logger.WithField("duration", int(time.Now().UnixNano())-timeStart).Print("Demo of metric")
 	}
 	return w, req
 }

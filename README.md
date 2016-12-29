@@ -7,38 +7,6 @@ The framework for the creation of microservices, written in Golang.
 
 Architecture microservice includes a handle, a tuner (configuration), place a couple of demonstration middleware and storage for them. All works is very simple: in the application configuration is loaded in view of the configuration file and command line environment. Created with the middleware *storage* and corresponding queues formed at the desired Route. Then run the server and request the application fulfills the desired queue.
 
-## Usage
-
-Copy your application this framework and use it as a prototype. Here's how your *mayn.go* file can be written (do not forget that you need to copy the entire library!)
-
-```Go
-package main
-
-import "github.com/claygod/Bxog"
-
-func main() {
-	conf, err := NewTuner("config.toml")
-	if err != nil {
-		panic(err)
-	}
-	store := NewStorage(conf)
-
-	hr := NewHandler(conf)
-
-	hello := hr.Queue(
-		store.Metric.Start,
-		store.Session.Check,
-		hr.HelloWorld,
-		store.Metric.End,
-	)
-
-	m := bxog.New()
-	m.Add("/", hello.Run)
-	m.Start(":" + conf.Main.Port)
-}
-```
-
-
 ## Tuner
 
 The important point for microservice configuration is loaded. I tried to make this as flexible functionality. The default configuration is loaded from the specified file (`config.toml`). Address configuration file can be changed from the command line like this: `yourservice -confile config.toml` Thus, you can create several different configuration files and run microservice with one of the configurations of your choice.

@@ -9,6 +9,8 @@ Architecture microservice includes a handle, a tuner (configuration), place a co
 
 ## Usage
 
+Copy your application this framework and use it as a prototype. Here's how your *mayn.go* file can be written (do not forget that you need to copy the entire library!)
+
 ```Go
 package main
 

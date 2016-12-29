@@ -26,19 +26,15 @@ type Metric struct {
 
 // Start - fix a starting time
 func (m *Metric) Start(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
-	if req != nil {
-		ctx := req.Context()
-		ctx = context.WithValue(ctx, "timeStart", int(time.Now().UnixNano()))
-		req = req.WithContext(ctx)
-	}
+	ctx := req.Context()
+	ctx = context.WithValue(ctx, "timeStart", int(time.Now().UnixNano()))
+	req = req.WithContext(ctx)
 	return w, req
 }
 
 // End - sending metrics on the duration
 func (m *Metric) End(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
-	if req != nil {
-		timeStart := req.Context().Value("timeStart").(int)
-		go m.logger.WithField("duration", int(time.Now().UnixNano())-timeStart).Print("Demo of metric")
-	}
+	timeStart := req.Context().Value("timeStart").(int)
+	go m.logger.WithField("duration", int(time.Now().UnixNano())-timeStart).Print("Demo of metric")
 	return w, req
 }

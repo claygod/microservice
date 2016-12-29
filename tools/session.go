@@ -26,17 +26,15 @@ type Session struct {
 
 // Check the run session
 func (s *Session) Check(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
-	if req != nil {
-		/*
-			// Example
-			session, err := s.store.Get(req, s.name)
-			if err != nil {
-				return w, req, true
-			} else {
-				session.Values["bar"] = "def"
-				session.Save(req, w)
-			}
-		*/
-	}
+	/*
+		// Example
+		session, err := s.store.Get(req, s.name)
+		if err != nil {
+			return w, req, true
+		} else {
+			session.Values["bar"] = "def"
+			session.Save(req, w)
+		}
+	*/
 	return w, req
 }

@@ -21,7 +21,7 @@ const (
 	DELIMITER_COMMAND string = "/"
 	// DELIMITER_PARAM - is used to separate key and value (command line)
 	DELIMITER_PARAM string = "="
-	// an argument path name of the configuration file on the command line
+	// ARGUMENT_NAME_CONF_FILE - an argument path name of the configuration file on the command line
 	ARGUMENT_NAME_CONF_FILE = "confile"
 )
 

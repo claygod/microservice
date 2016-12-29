@@ -7,6 +7,35 @@ The framework for the creation of microservices, written in Golang.
 
 Architecture microservice includes a handle, a tuner (configuration), place a couple of demonstration middleware and storage for them. All works is very simple: in the application configuration is loaded in view of the configuration file and command line environment. Created with the middleware *storage* and corresponding queues formed at the desired Route. Then run the server and request the application fulfills the desired queue.
 
+## Usage
+
+```Go
+package main
+
+import "github.com/claygod/Bxog"
+
+func main() {
+	conf, err := NewTuner("config.toml")
+	if err != nil {
+		panic(err)
+	}
+	store := NewStorage(conf)
+
+	hr := NewHandler(conf)
+
+	hello := hr.Queue(
+		store.Metric.Start,
+		store.Session.Check,
+		hr.HelloWorld,
+		store.Metric.End,
+	)
+
+	m := bxog.New()
+	m.Add("/", hello.Run)
+	m.Start(":" + conf.Main.Port)
+}
+```
+
 
 ## Tuner
 

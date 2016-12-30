@@ -7,17 +7,24 @@ package main
 import (
 	"net/http"
 	"net/http/httptest"
-	//"strings"
 	"testing"
 )
 
-func TestHandlerQueue(t *testing.T) {
+func TestHandlerQueueWithArgs(t *testing.T) {
 	hr := &Handler{}
 	f1 := func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) { return nil, nil }
 	f2 := func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) { return nil, nil }
 	q := hr.Queue(f1, f2)
 	if q == nil {
 		t.Error("Failed to create a new queue")
+	}
+}
+
+func TestHandlerQueueEmptyArgs(t *testing.T) {
+	hr := &Handler{}
+	q := hr.Queue()
+	if q == nil {
+		t.Error("Failed to create a new queue (without args)")
 	}
 }
 

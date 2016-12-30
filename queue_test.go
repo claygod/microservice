@@ -27,3 +27,11 @@ func TestQueue(t *testing.T) {
 		t.Error("Error in Queue")
 	}
 }
+
+func TestQueueZeroLengthArgs(t *testing.T) {
+	q := NewQueue([]func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request){})
+
+	if q == nil {
+		t.Error("Error creating ochereni with zero arguments")
+	}
+}

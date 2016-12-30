@@ -108,26 +108,31 @@ func (t *Tuner) reflecting(key1 string, key2 string, str string) error {
 		if _, okk := m.Type.FieldByName(key2); okk {
 			v3 := v2.FieldByName(key2).Addr()
 			v3 = reflect.Indirect(v3)
-			tp := v3.Type()
-			switch tp {
-			case reflect.TypeOf(""):
-				v3.SetString(str)
-			case reflect.TypeOf(1):
-				num, err := strconv.ParseInt(str, 10, 64)
-				if err != nil {
-					return err
-				}
-				v3.SetInt(num)
-			case reflect.TypeOf(0.1):
-				num, err := strconv.ParseFloat(str, 64)
-				if err != nil {
-					return err
-				}
-				v3.SetFloat(num)
-			default:
-				return errors.New("Not supported by type!")
-			}
+			return t.switchType(v3, str)
 		}
+	}
+	return nil
+}
+
+func (t *Tuner) switchType(v3 reflect.Value, str string) error {
+	tp := v3.Type()
+	switch tp {
+	case reflect.TypeOf(""):
+		v3.SetString(str)
+	case reflect.TypeOf(1):
+		num, err := strconv.ParseInt(str, 10, 64)
+		if err != nil {
+			return err
+		}
+		v3.SetInt(num)
+	case reflect.TypeOf(0.1):
+		num, err := strconv.ParseFloat(str, 64)
+		if err != nil {
+			return err
+		}
+		v3.SetFloat(num)
+	default:
+		return errors.New("Not supported by type!")
 	}
 	return nil
 }

@@ -5,6 +5,7 @@ package main
 // Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
+	"reflect"
 	"testing"
 )
 
@@ -76,5 +77,41 @@ func TestTunerReflecting(t *testing.T) {
 
 	if conf.Main.Port != "81" {
 		t.Error("Create in reflecting (error assigning a new value)")
+	}
+}
+
+func TestTunerSwitchTypeInt(t *testing.T) {
+	conf, err := NewTuner("./config.toml")
+	if err != nil {
+		t.Error(err)
+	}
+	var x int = 80
+	v := reflect.ValueOf(&x)
+	if err := conf.switchType(v.Elem(), "81"); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestTunerSwitchTypeFloat(t *testing.T) {
+	conf, err := NewTuner("./config.toml")
+	if err != nil {
+		t.Error(err)
+	}
+	var x float64 = 1.1
+	v := reflect.ValueOf(&x)
+	if err := conf.switchType(v.Elem(), "2.2"); err != nil {
+		t.Error(err)
+	}
+}
+
+func TestTunerSwitchTypeString(t *testing.T) {
+	conf, err := NewTuner("./config.toml")
+	if err != nil {
+		t.Error(err)
+	}
+	var x string = "ab"
+	v := reflect.ValueOf(&x)
+	if err := conf.switchType(v.Elem(), "cd"); err != nil {
+		t.Error(err)
 	}
 }

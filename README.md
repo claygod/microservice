@@ -30,8 +30,10 @@ For a general understanding of what is the speed of microservice using the propo
 
 The default configuration file:
 - `config.toml`
+
 Specify in the command line another file:
 - `yourservice -confile other.toml`
+
 To change the setting on the command line, you specify the section and parameter name (composed by a slash): 
 - `yourservice -Main/Port 85`
 

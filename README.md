@@ -1,6 +1,5 @@
 # Microservice
 
-[![API documentation](https://godoc.org/github.com/claygod/microservice?status.svg)](https://godoc.org/github.com/claygod/temp/microservice-doc)
 [![Go Report Card](https://goreportcard.com/badge/github.com/claygod/microservice)](https://goreportcard.com/report/github.com/claygod/microservice)
 
 The framework for the creation of microservices, written in Golang. (note: http microservice)

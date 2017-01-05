@@ -20,9 +20,9 @@ To do this, you just need to create a new public method in the *handler*, which 
 
 ## Perfomance
 
-For a general understanding of what is the speed of microservice using the proposed architecture will be high, and bring the benchmark results obtained by me on my computer IntelCore i3-2120:
+For a general understanding of what is the speed of microservice using the proposed architecture will be high, and bring the benchmark results obtained by me on my computer:
 
-- BenchmarkMain-2           	10000000	       192 ns/op
+- BenchmarkMain-2            	10000000	       192 ns/op
 - BenchmarkMainParallel-2   	10000000	       104 ns/op
 
 ## Tuner

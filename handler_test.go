@@ -10,24 +10,6 @@ import (
 	"testing"
 )
 
-func TestHandlerQueueWithArgs(t *testing.T) {
-	hr := &Handler{}
-	f1 := func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) { return nil, nil }
-	f2 := func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) { return nil, nil }
-	q := hr.Queue(f1, f2)
-	if q == nil {
-		t.Error("Failed to create a new queue")
-	}
-}
-
-func TestHandlerQueueEmptyArgs(t *testing.T) {
-	hr := &Handler{}
-	q := hr.Queue()
-	if q == nil {
-		t.Error("Failed to create a new queue (without args)")
-	}
-}
-
 func TestHandlerHelloWorld(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
@@ -36,8 +18,8 @@ func TestHandlerHelloWorld(t *testing.T) {
 		panic(err)
 	}
 	hr := NewHandler(conf)
-	_, req = hr.HelloWorld(w, req)
-	if v := req.Context().Value("Test"); v == nil || v.(string) != "Test" {
+	hr.HelloWorld(w, req)
+	if req.Header.Get("Test") != "Test" {
 		t.Error("Error Handler in the `HelloWorld`")
 	}
 }

@@ -7,7 +7,8 @@ package main
 import "fmt"
 import "net/http"
 import "github.com/Sirupsen/logrus"
-import "context"
+
+//import "context"
 
 // NewHandler - create a new Handler
 func NewHandler(conf *Tuner) *Handler {
@@ -24,24 +25,19 @@ type Handler struct {
 	Log  *logrus.Logger
 }
 
-// Queue - create the new queue to the handler
-func (h *Handler) Queue(args ...func(http.ResponseWriter, *http.Request) (http.ResponseWriter, *http.Request)) *Queue {
-	x := NewQueue(args)
-	return x
-}
-
 // HelloWorld - handler method for example
-func (h *Handler) HelloWorld(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
+func (h *Handler) HelloWorld(w http.ResponseWriter, req *http.Request) {
 	if req != nil {
 		w.Header().Del("Content-Type")
 		w.Header().Set("Content-Type", "text/plain; charset=UTF-8")
 		w.Write([]byte(fmt.Sprintf("Hello %s!", h.Conf.Main.Name)))
-		// for test
-		ctx := req.Context()
-		ctx = context.WithValue(ctx, "Test", "Test")
-		req = req.WithContext(ctx)
+		// for tests
+		req.Header.Set("Test", "Test")
+		///ctx := req.Context()
+		///ctx = context.WithValue(ctx, "Test", "Test")
+		///req = req.WithContext(ctx)
 		// demo log
-		// go h.Log.WithField("hello", h.Conf.Main.Name).Info("Demo of logging")
+		// go h.Log.WithField("hello", h.Conf.Main.Name).Error("Demo of error")
 	}
-	return w, req
+	return
 }

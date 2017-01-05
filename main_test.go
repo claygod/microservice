@@ -16,16 +16,13 @@ func TestMain(t *testing.T) {
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
 
-	hr := NewHandler(&Tuner{})
-
-	hello := hr.Queue(
-		func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
+	hello :=
+		func(w http.ResponseWriter, req *http.Request) {
 			w.WriteHeader(777)
-			return w, req
-		},
-	)
+			return
+		}
 	m := bxog.New()
-	m.Add("/", hello.Run)
+	m.Add("/", hello)
 	m.Test()
 	m.ServeHTTP(w, req)
 	if w.Code != 777 {
@@ -37,13 +34,12 @@ func BenchmarkMain(b *testing.B) {
 	b.StopTimer()
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
-	q := NewQueue([]func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request){func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
-		return w, req
-	}})
-	q.Run(w, req)
+	f := func(w http.ResponseWriter, req *http.Request) {
+		return
+	}
 
 	m := bxog.New()
-	m.Add("/", q.Run)
+	m.Add("/", f)
 	m.Test()
 	b.StartTimer()
 	for n := 0; n < b.N; n++ {
@@ -55,16 +51,14 @@ func BenchmarkMainParallel(b *testing.B) {
 	b.StopTimer()
 	req, _ := http.NewRequest("GET", "/", nil)
 	w := httptest.NewRecorder()
-	q := NewQueue([]func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request){func(w http.ResponseWriter, req *http.Request) (http.ResponseWriter, *http.Request) {
-		return w, req
-	}})
-	q.Run(w, req)
+	f := func(w http.ResponseWriter, req *http.Request) {
+		return
+	}
 
 	m := bxog.New()
-	m.Add("/", q.Run)
+	m.Add("/", f)
 	m.Test()
 	b.StartTimer()
-
 	b.RunParallel(func(pb *testing.PB) {
 		for pb.Next() {
 			m.ServeHTTP(w, req)

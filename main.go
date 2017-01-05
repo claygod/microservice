@@ -1,5 +1,5 @@
-//This library provides a simple framework of microservice, which includes
-//a configurator, a logger, metrics, and of course the handler
+// This library provides a simple framework of microservice, which includes
+// a configurator, a metrics, and of course the handler
 package main
 
 // Microservice
@@ -7,6 +7,7 @@ package main
 // Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import "github.com/claygod/Bxog"
+import "github.com/claygod/microservice/tools"
 
 // Main
 func main() {
@@ -14,18 +15,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-	store := NewStorage(conf)
 
 	hr := NewHandler(conf)
 
-	hello := hr.Queue(
-		store.Metric.Start,
-		store.Session.Check,
-		hr.HelloWorld,
-		store.Metric.End,
-	)
-
 	m := bxog.New()
-	m.Add("/", hello.Run)
+	m.Add("/", tools.Metric(hr.HelloWorld))
 	m.Start(":" + conf.Main.Port)
 }

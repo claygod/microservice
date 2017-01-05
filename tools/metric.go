@@ -11,6 +11,7 @@ import (
 	"github.com/Sirupsen/logrus"
 )
 
+// Metric - an example of a middleware that logged the duration of the application
 func Metric(f func(w http.ResponseWriter, r *http.Request)) func(w http.ResponseWriter, r *http.Request) {
 	logger := logrus.New()
 	return func(w http.ResponseWriter, r *http.Request) {

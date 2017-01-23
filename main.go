@@ -6,7 +6,7 @@ package main
 // Main
 // Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
-import "github.com/claygod/BxogV2"
+import b "github.com/claygod/BxogV2"
 import "github.com/claygod/microservice/tools"
 
 // Main
@@ -18,7 +18,7 @@ func main() {
 
 	hr := NewHandler(conf)
 
-	m := bxogv2.New()
+	m := b.New()
 	m.Add("/", tools.Metric(hr.HelloWorld))
 	m.Start(":" + conf.Main.Port)
 }

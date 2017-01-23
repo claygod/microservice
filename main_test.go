@@ -9,7 +9,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	"github.com/claygod/Bxog"
+	bx "github.com/claygod/BxogV2"
 )
 
 func TestMain(t *testing.T) {
@@ -21,7 +21,7 @@ func TestMain(t *testing.T) {
 			w.WriteHeader(777)
 			return
 		}
-	m := bxog.New()
+	m := bx.New()
 	m.Add("/", hello)
 	m.Test()
 	m.ServeHTTP(w, req)
@@ -38,7 +38,7 @@ func BenchmarkMain(b *testing.B) {
 		return
 	}
 
-	m := bxog.New()
+	m := bx.New()
 	m.Add("/", f)
 	m.Test()
 	b.StartTimer()
@@ -55,7 +55,7 @@ func BenchmarkMainParallel(b *testing.B) {
 		return
 	}
 
-	m := bxog.New()
+	m := bx.New()
 	m.Add("/", f)
 	m.Test()
 	b.StartTimer()

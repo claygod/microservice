@@ -53,3 +53,5 @@ Any of these libraries can be replaced or supplemented, in this case, they are l
 ## Conclusion
 
 Microservice Library does not claim the laurels of the only true solution, but on occasion, I hope, will help you create your own micro-architecture of the service, becoming the prototype for future applications.
+
+Copyright © 2017-2019 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru

@@ -3,55 +3,67 @@
 [![API documentation](https://godoc.org/github.com/claygod/microservice?status.svg)](https://godoc.org/github.com/claygod/microservice)
 [![Go Report Card](https://goreportcard.com/badge/github.com/claygod/microservice)](https://goreportcard.com/report/github.com/claygod/microservice)
 
-The framework for the creation of microservices, written in Golang. (note: http microservice)
+The framework for the creation of microservices, written in Golang. 
+This package is implemented using clean architecture principles
+A good article on implementing these principles in Golang:
+http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/
 
-Architecture microservice includes:
+## Endpoints
 
-- handle
-- tuner (configuration)
-- middleware-style tools (for demo)
+Code in `/services/gateways/gatein/gatein.go`
 
-### Create a new Middleware
+- `/` welcome handler
+- `/health_check` for SRE
+- `/readyness` for kubernetes
+- `/piblic/v1/bar/:key` public route (example)
 
-Use as a example *tools/metric.go* file. 
+### Using
 
-## Creating a new handler
+Build and run main.go
 
-To do this, you just need to create a new public method in the *handler*, which takes input *http.ResponseWriter, http.Request*. Look created to demonstrate the method *HelloWorld*.
+Example requests:
+localhost:8080/piblic/v1/bar/one
+localhost:8080/piblic/v1/bar/123
+localhost:8080/piblic/v1/bar/secret
+localhost:8080/piblic/v1/bar/looonnngggggkkkeeyyyyyyy
 
-## Perfomance
+## Clean architecture
 
-For a general understanding of what is the speed of microservice using the proposed architecture will be high, and bring the benchmark results obtained by me on my computer:
+#### Entity
 
-- BenchmarkMain-2            	10000000	       192 ns/op
-- BenchmarkMainParallel-2   	10000000	       104 ns/op
+Path */domain*
 
-## Tuner
+#### Usecases
+
+Path */usecases*
+
+#### Interfaces
+
+Path */service*
+
+#### Infrastructure
+
+Path */app* , */config* and core
+
+## Config
 
 The default configuration file:
-- `config.toml`
+- `config/config.toml`
 
 Specify in the command line another file:
 - `yourservice -confile other.toml`
 
-To change the setting on the command line, you specify the section and parameter name (composed by a slash): 
-- `yourservice -Main/Port 85`
-
-Configuring priorities:
-- command line (highest priority)
-- environment
-- configuration file
-
 ## Dependencies
 
-- Logger	https://github.com/Sirupsen/logrus
-- Route	https://github.com/claygod/Bxog
-- Config	https://github.com/BurntSushi/toml
-
-Any of these libraries can be replaced or supplemented, in this case, they are likely designed to show which way to develop their own microservices. You might also be useful to connect *logstash* and *influxdb*.
+- github.com/BurntSushi/toml v0.4.1
+- github.com/claygod/tools v0.0.0-20211122181936-bab1329a2e3d
+- github.com/google/uuid v1.3.0
+- github.com/julienschmidt/httprouter v1.3.0
+- github.com/pborman/getopt v1.1.0
+- github.com/sirupsen/logrus v1.8.1
 
 ## Conclusion
 
-Microservice Library does not claim the laurels of the only true solution, but on occasion, I hope, will help you create your own micro-architecture of the service, becoming the prototype for future applications.
+Microservice does not claim the laurels of the only true solution, but on occasion, I hope, will help you create your own micro-architecture of the service, becoming the prototype for future applications.
 
-Copyright © 2017-2019 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru
+Copyright © 2017-2021 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru

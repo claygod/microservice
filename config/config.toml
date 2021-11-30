@@ -1,0 +1,15 @@
+[Main]
+	Addr				= "1234"
+[Interactor]
+	Title			= "foo-bar"
+[GateIn]
+	Title			= "gatein"
+	Port				= ":8080"
+[FooRepo]
+	Title			= "foo repo"
+	Prefix			= "from"
+	MaxIDLenght		= 10
+[BarGate]
+	Title			= "bar gate"
+	Prefix			= "link"
+	MaxIDLenght		= 15

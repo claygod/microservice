@@ -11,7 +11,7 @@ import (
 var ErrUserBadRequest = errors.New("bad request")
 
 type Config struct {
-	Title string
+	Title *string `env:"USECASES_TITLE"`
 }
 
 type HealthResponceStatus struct {

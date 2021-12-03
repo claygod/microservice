@@ -25,7 +25,7 @@ Example requests:
 
 - localhost:8080/piblic/v1/bar/one
 - localhost:8080/piblic/v1/bar/123
-- localhost:8080/piblic/v1/bar/secret
+- localhost:8080/piblic/v1/bar/secret -> response 404
 - localhost:8080/piblic/v1/bar/looonnngggggkkkeeyyyyyyy
 
 ## Clean architecture
@@ -48,11 +48,31 @@ Path */app* , */config* and core
 
 ## Config
 
+Types of variables that support the use of environment variables
+in the configuration (a pointer is required, or will be ignored!) :
+- string
+- float32, float64
+- Int, Int8, Int16, Int32, Int64
+- Uint, Uint8, Uint16, Uint32, Uint64
+
 The default configuration file:
 - `config/config.toml`
 
 Specify in the command line another file:
-- `yourservice -confile other.toml`
+- `yourservice -config other.toml`
+
+Use environment variables in configuration:
+- `yourservice -env true`
+
+Command line xample:
+- `foo -config stage.toml -env true`
+
+Configuration with environment tag example:
+```Golang
+type Config struct {
+	MaxIDLenght *int `env:"FOO_MAX_ID_LENGHT"`
+}
+```
 
 ## Dependencies
 

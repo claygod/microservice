@@ -20,6 +20,8 @@ import (
 
 const (
 	defaultConfig               = "./config/config.toml"
+	defaultUseEnv               = "false"
+	envFieldsTag                = "env"
 	shutdownTime  time.Duration = 1 * time.Minute // shutdown time limit
 )
 
@@ -32,6 +34,10 @@ func main() {
 	cnf, err := loadConfig(*params.ConfigPath)
 	if err != nil {
 		panic(err)
+	}
+
+	if params.EnvEnable != nil && *params.EnvEnable != defaultUseEnv {
+		cnf.LoadEnvironment(envFieldsTag)
 	}
 
 	cmd, err := app.New(cnf)
@@ -54,7 +60,10 @@ func main() {
 }
 
 func getCommandLineParameters() *commandLineParameters {
-	params := &commandLineParameters{ConfigPath: getopt.StringLong("config", 'c', defaultConfig, "Path to config file")}
+	params := &commandLineParameters{
+		ConfigPath: getopt.StringLong("config", 'c', defaultConfig, "Path to config file"),
+		EnvEnable:  getopt.StringLong("env", 'e', defaultUseEnv, "Use environment variables in configuration "),
+	}
 
 	getopt.Parse()
 
@@ -63,8 +72,8 @@ func getCommandLineParameters() *commandLineParameters {
 
 type commandLineParameters struct {
 	ConfigPath *string
-	PortHTTP   *string
-	EnvEnable  *string
+	// PortHTTP   *string
+	EnvEnable *string
 }
 
 func loadConfig(path string) (*app.Config, error) {

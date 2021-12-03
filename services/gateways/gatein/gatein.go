@@ -72,7 +72,7 @@ func (g *GateIn) Start() error {
 
 	g.server = &http.Server{
 		Handler: g.router,
-		Addr:    g.config.Port,
+		Addr:    *g.config.Port,
 		// Good practice: enforce timeouts for servers you create!
 		// WriteTimeout: 15 * time.Second,
 		// ReadTimeout:  15 * time.Second,

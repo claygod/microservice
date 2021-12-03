@@ -49,7 +49,7 @@ func (f *FooRepo) GetFoo(fooID string) (*domain.Foo, error) {
 
 		return nil, nil
 
-	case len(fooID) > f.config.MaxIDLenght:
+	case len(fooID) > *f.config.MaxIDLenght:
 		f.logger.Warn(fmt.Errorf("%s:length of id `%s` is greater than %d", f.config.Title, fooID, f.config.MaxIDLenght))
 
 		return nil, nil
@@ -87,5 +87,5 @@ func (f *FooRepo) CheckStatus() int {
 type Config struct {
 	Title       string
 	Prefix      string
-	MaxIDLenght int
+	MaxIDLenght *int `env:"FOO_MAX_ID_LENGHT"`
 }

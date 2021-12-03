@@ -13,8 +13,8 @@ import (
 )
 
 type Config struct {
-	Title string
-	Port  string
+	Title *string `env:"GATEIN_TITLE"`
+	Port  *string `env:"GATEIN_PORT"`
 }
 
 const (
@@ -28,7 +28,7 @@ func (g *GateIn) getReqID(req *http.Request) string {
 	x := req.Header.Get(headerRequestID)
 
 	if x == "" {
-		x = fmt.Sprintf("%s-%s", g.config.Title, uuid.New().String())
+		x = fmt.Sprintf("%s-%s", *g.config.Title, uuid.New().String())
 	}
 
 	return x

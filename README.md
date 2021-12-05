@@ -1,6 +1,7 @@
 # Microservice
 
 [![API documentation](https://godoc.org/github.com/claygod/microservice?status.svg)](https://godoc.org/github.com/claygod/microservice)
+[![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
 [![Go Report Card](https://goreportcard.com/badge/github.com/claygod/microservice)](https://goreportcard.com/report/github.com/claygod/microservice)
 
 The framework for the creation of microservices, written in Golang. 
@@ -83,8 +84,14 @@ type Config struct {
 - github.com/pborman/getopt
 - github.com/sirupsen/logrus
 
+## ToDo
+
+- [x] Use environment variables in configuration
+- [ ] Add support for metrics
+- [ ] Use protocol gRPC
+
 ## Conclusion
 
 Microservice does not claim the laurels of the only true solution, but on occasion, I hope, will help you create your own micro-architecture of the service, becoming the prototype for future applications.
 
-Copyright © 2017-2021 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru
+### Copyright © 2017-2021 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru

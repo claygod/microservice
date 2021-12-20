@@ -16,6 +16,7 @@ Code in `/services/gateways/gatein/gatein.go`
 - `/` welcome handler
 - `/health_check` for SRE
 - `/readyness` for kubernetes
+- `/metrics` prometheus metrics
 - `/piblic/v1/bar/:key` public route (example)
 
 ### Using

@@ -8,5 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/pborman/getopt v1.1.0
+	github.com/prometheus/client_golang v1.11.0 // indirect
+	github.com/prometheus/tsdb v0.7.1 // indirect
 	github.com/sirupsen/logrus v1.8.1
 )

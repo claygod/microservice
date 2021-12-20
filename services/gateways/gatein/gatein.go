@@ -14,6 +14,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	"github.com/claygod/microservice/domain"
+	"github.com/claygod/microservice/services/metrics"
 	"github.com/claygod/microservice/usecases"
 )
 
@@ -24,15 +25,19 @@ type GateIn struct {
 	server           *http.Server
 	foobarInteractor *usecases.FooBarInteractor
 	config           *Config
+	metrics          *metrics.Metrics
 }
 
-func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config, fbi *usecases.FooBarInteractor) *GateIn {
+func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config,
+	fbi *usecases.FooBarInteractor, mtr *metrics.Metrics) *GateIn {
 	g := &GateIn{
 		logger:           lg,
 		foobarInteractor: fbi,
 		config:           cnf,
 		hasp:             ss,
+		metrics:          mtr,
 	}
+
 	router := httprouter.New()
 
 	router.GlobalOPTIONS = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -53,6 +58,7 @@ func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config, fbi *useca
 	// service routes
 	router.GET("/health_check", g.middle(g.HealthCheckHandler)) // for SRE
 	router.GET("/readyness", g.middle(g.ReadynessHandler))      // for kubernetes
+	router.GET("/metrics", g.Metrics)
 
 	// public routes
 	router.GET("/piblic/v1/bar/:key", g.middle(g.GetBarHandler))
@@ -107,7 +113,7 @@ func (g *GateIn) Stop() error {
 func (g *GateIn) middle(f func(http.ResponseWriter, *http.Request,
 	httprouter.Params)) func(http.ResponseWriter, *http.Request, httprouter.Params) {
 	return func(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
-		t1 := time.Now().UnixNano()
+		timeStart := time.Now().UnixNano()
 
 		if !g.hasp.IsRun() {
 			http.Error(w, "service is stopped", http.StatusServiceUnavailable)
@@ -122,9 +128,12 @@ func (g *GateIn) middle(f func(http.ResponseWriter, *http.Request,
 
 		f(w, req, p)
 
-		if reqURI := req.URL.RequestURI(); reqURI != "/health_check" && reqURI != "/readyness" {
-			go g.logger.WithField(headerRequestID, g.getReqID(req)).Info(fmt.Sprintf("duration: %d ms , link: %s",
-				(time.Now().UnixNano()-t1)/nanoToMilli, req.URL.RequestURI()))
+		if reqURI := req.URL.RequestURI(); reqURI != "/health_check" && reqURI != "/readyness" && reqURI != "/metrics" {
+			durNano := (time.Now().UnixNano() - timeStart)
+			g.metrics.Request(req.URL.RequestURI(), time.Duration(durNano))
+
+			dur := durNano / nanoToMilli
+			go g.logger.WithField(headerRequestID, g.getReqID(req)).Info(fmt.Sprintf("duration: %d ms , link: %s", dur, req.URL.RequestURI()))
 		}
 	}
 }

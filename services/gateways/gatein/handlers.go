@@ -82,3 +82,7 @@ func (g *GateIn) ReadynessHandler(w http.ResponseWriter, req *http.Request, para
 		w.WriteHeader(http.StatusServiceUnavailable)
 	}
 }
+
+func (g *GateIn) Metrics(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	g.metrics.Handler().ServeHTTP(w, req)
+}

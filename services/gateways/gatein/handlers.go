@@ -14,12 +14,19 @@ import (
 
 	"github.com/claygod/microservice/usecases"
 	"github.com/julienschmidt/httprouter"
+	"github.com/sirupsen/logrus"
 )
 
 func (g *GateIn) WelcomeHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	if _, err := io.WriteString(w, "Welcome to Service!..."); err != nil {
-		go g.logger.WithField(headerRequestID, g.getReqID(req)).Error(err)
+		lg := g.logger.WithField(headerRequestID, g.getReqID(req))
+
+		g.writeError(lg, w, err, http.StatusInternalServerError)
+
+		return
 	}
+
+	go g.metrics.ResponceCode(http.StatusOK)
 }
 
 func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
@@ -29,19 +36,16 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	result, err := g.foobarInteractor.GetBar(params.ByName("key"), ctx)
 
 	if err != nil {
-		go lg.Error(err)
-
 		if errors.Is(err, usecases.ErrUserBadRequest) {
-			http.Error(w, err.Error(), http.StatusBadRequest)
-
+			g.writeError(lg, w, err, http.StatusBadRequest)
 		} else {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			g.writeError(lg, w, err, http.StatusInternalServerError)
 		}
 
 		return
 
 	} else if result == nil {
-		http.Error(w, "not found", http.StatusNotFound)
+		g.writeError(lg, w, errors.New("not found"), http.StatusNotFound)
 
 		return
 	}
@@ -49,13 +53,12 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	out, err := json.Marshal(result)
 
 	if err != nil {
-		go lg.Error(err)
-
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		g.writeError(lg, w, err, http.StatusInternalServerError)
 
 		return
 	}
 
+	go g.metrics.ResponceCode(http.StatusOK)
 	w.Write([]byte(out))
 }
 
@@ -65,13 +68,12 @@ func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, pa
 	out, err := json.Marshal(g.foobarInteractor.GetHealth())
 
 	if err != nil {
-		go lg.Error(err)
-
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		g.writeError(lg, w, err, http.StatusInternalServerError)
 
 		return
 	}
 
+	go g.metrics.ResponceCode(http.StatusOK)
 	w.Write([]byte(out))
 }
 
@@ -85,4 +87,11 @@ func (g *GateIn) ReadynessHandler(w http.ResponseWriter, req *http.Request, para
 
 func (g *GateIn) Metrics(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	g.metrics.Handler().ServeHTTP(w, req)
+}
+
+func (g *GateIn) writeError(lg *logrus.Entry, w http.ResponseWriter, err error, status int) {
+	go g.metrics.ResponceCode(status)
+	go lg.Error(err)
+
+	http.Error(w, err.Error(), status)
 }

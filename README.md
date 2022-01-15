@@ -32,6 +32,8 @@ Example requests:
 
 ## Clean architecture
 
+Distribution of architectural entities by layers
+
 #### Entity
 
 Path */domain*

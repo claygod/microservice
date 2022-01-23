@@ -5,7 +5,7 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/claygod/microservice)](https://goreportcard.com/report/github.com/claygod/microservice)
 
 The framework for the creation of microservices, written in Golang. 
-This package is implemented using clean architecture principles
+This package is implemented using clean architecture principles.
 A good article on implementing these principles in Golang:
 http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/
 
@@ -56,8 +56,8 @@ Types of variables that support the use of environment variables
 in the configuration (a pointer is required, or will be ignored!) :
 - string
 - float32, float64
-- Int, Int8, Int16, Int32, Int64
-- Uint, Uint8, Uint16, Uint32, Uint64
+- int, int8, int16, int32, int64
+- uint, uint8, uint16, uint32, uint64
 
 The default configuration file:
 - `config/config.toml`
@@ -85,16 +85,22 @@ type Config struct {
 - github.com/google/uuid
 - github.com/julienschmidt/httprouter
 - github.com/pborman/getopt
+- github.com/prometheus/client_golang
+- github.com/prometheus/tsdb
 - github.com/sirupsen/logrus
 
 ## ToDo
 
 - [x] Use environment variables in configuration
-- [ ] Add support for metrics
+- [x] Add support for metrics
 - [ ] Use protocol gRPC
 
 ## Conclusion
 
 Microservice does not claim the laurels of the only true solution, but on occasion, I hope, will help you create your own micro-architecture of the service, becoming the prototype for future applications.
 
-### Copyright © 2017-2021 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru
+## License
+
+GNU GENERAL PUBLIC LICENSE Version 3
+
+### Copyright © 2017-2022 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru

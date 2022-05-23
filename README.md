@@ -99,6 +99,10 @@ type Config struct {
 
 Microservice does not claim the laurels of the only true solution, but on occasion, I hope, will help you create your own micro-architecture of the service, becoming the prototype for future applications.
 
+## Give us a star!
+
+If you like or are using this project to learn or start your solution, please give it a star. Thank you!
+
 ## License
 
 GNU GENERAL PUBLIC LICENSE Version 3

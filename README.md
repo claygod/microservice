@@ -2,6 +2,8 @@
 
 [![API documentation](https://godoc.org/github.com/claygod/microservice?status.svg)](https://godoc.org/github.com/claygod/microservice)
 [![Mentioned in Awesome Go](https://awesome.re/mentioned-badge.svg)](https://github.com/avelino/awesome-go)
+[![forks](https://img.shields.io/github/forks/claygod/microservice)](https://github.com/claygod/microservice/network/members)
+[![stars](https://img.shields.io/github/stars/claygod/microservice)](https://github.com/claygod/microservice/stargazers)
 [![Go Report Card](https://goreportcard.com/badge/github.com/claygod/microservice)](https://goreportcard.com/report/github.com/claygod/microservice)
 
 The framework for the creation of microservices, written in Golang. 

@@ -4,7 +4,7 @@ package main
 // Main
 // This library provides a simple framework of microservice, which includes
 // a configurator, a metrics, and of course the handler
-// Copyright © 2016 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2016-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"fmt"

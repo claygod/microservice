@@ -2,7 +2,7 @@ package usecases
 
 // Microservice
 // Interactor (config)
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"errors"

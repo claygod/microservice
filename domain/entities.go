@@ -2,7 +2,7 @@ package domain
 
 // Microservice
 // Entities
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 type Foo struct {
 	BarID string

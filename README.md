@@ -109,4 +109,4 @@ If you like or are using this project to learn or start your solution, please gi
 
 GNU GENERAL PUBLIC LICENSE Version 3
 
-### Copyright © 2017-2022 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru
+### Copyright © 2017-2024 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru

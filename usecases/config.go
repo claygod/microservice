@@ -11,7 +11,7 @@ import (
 var ErrUserBadRequest = errors.New("bad request")
 
 type Config struct {
-	Title *string `env:"USECASES_TITLE"`
+	Title string `toml:"INTER_TITLE" yaml:"INTER_TITLE" env:"INTER_TITLE"`
 }
 
 type HealthResponceStatus struct {

@@ -43,7 +43,7 @@ func (b *BarGate) GetBar(barID string) (*domain.Bar, error) {
 
 		return nil, nil
 
-	case len(barID) > *b.config.MaxIDLenght:
+	case len(barID) > b.config.MaxIDLenght:
 		b.logger.Warn(fmt.Errorf("%s:length of id `%s` is greater than %d", b.config.Title, barID, b.config.MaxIDLenght))
 
 		return nil, nil
@@ -79,7 +79,7 @@ func (b *BarGate) CheckStatus() int {
 }
 
 type Config struct {
-	Title       string
-	Prefix      string
-	MaxIDLenght *int `env:"BAR_MAX_ID_LENGHT"`
+	Title       string `toml:"GATE_TITLE" yaml:"GATE_TITLE" env:"GATE_TITLE"`
+	Prefix      string `toml:"GATE_PREFIX" yaml:"GATE_PREFIX" env:"GATE_PREFIX"`
+	MaxIDLenght int    `toml:"GATE_MAX_ID_LENGHT" yaml:"GATE_MAX_ID_LENGHT" env:"GATE_MAX_ID_LENGHT"`
 }

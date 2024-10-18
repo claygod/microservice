@@ -27,10 +27,14 @@ Build and run main.go
 
 Example requests:
 
-- localhost:8080/piblic/v1/bar/one
-- localhost:8080/piblic/v1/bar/123
+- localhost:8080/piblic/v1/bar/one -> {"Data":"three"}
 - localhost:8080/piblic/v1/bar/secret -> response 404
-- localhost:8080/piblic/v1/bar/looonnngggggkkkeeyyyyyyy
+- localhost:8080/piblic/v1/bar/looonnngggggkkkeeyyyyyyy -> response 404
+
+### Environment
+
+Add to ENV `export GATE_IN_TITLE=Yo-ho-ho!`
+ang open in browser `http://localhost:8080/`
 
 ## Clean architecture
 
@@ -54,47 +58,27 @@ Path */app* , */config* and core
 
 ## Config
 
-Types of variables that support the use of environment variables
-in the configuration (a pointer is required, or will be ignored!) :
-- string
-- float32, float64
-- int, int8, int16, int32, int64
-- uint, uint8, uint16, uint32, uint64
-
 The default configuration file:
 - `config/config.toml`
 
 Specify in the command line another file:
 - `yourservice -config other.toml`
 
-Use environment variables in configuration:
-- `yourservice -env true`
-
-Command line xample:
-- `foo -config stage.toml -env true`
-
-Configuration with environment tag example:
-```Golang
-type Config struct {
-	MaxIDLenght *int `env:"FOO_MAX_ID_LENGHT"`
-}
-```
-
 ## Dependencies
 
-- github.com/BurntSushi/toml
-- github.com/claygod/tools
-- github.com/google/uuid
-- github.com/julienschmidt/httprouter
-- github.com/pborman/getopt
-- github.com/prometheus/client_golang
-- github.com/prometheus/tsdb
-- github.com/sirupsen/logrus
+	github.com/claygod/tools v0.0.0-20211122181936-bab1329a2e3d
+	github.com/dsbasko/go-cfg v1.2.0
+	github.com/google/uuid v1.3.0
+	github.com/julienschmidt/httprouter v1.3.0
+	github.com/pborman/getopt v1.1.0
+	github.com/prometheus/client_golang v1.11.0
+	github.com/sirupsen/logrus v1.8.1
 
 ## ToDo
 
 - [x] Use environment variables in configuration
 - [x] Add support for metrics
+- [ ] Input validate
 - [ ] Use protocol gRPC
 
 ## Conclusion

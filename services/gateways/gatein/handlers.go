@@ -18,7 +18,7 @@ import (
 )
 
 func (g *GateIn) WelcomeHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	if _, err := io.WriteString(w, "Welcome to Service!..."); err != nil {
+	if _, err := io.WriteString(w, "Welcome to service "+g.config.Title); err != nil {
 		lg := g.logger.WithField(headerRequestID, g.getReqID(req))
 
 		g.writeError(lg, w, err, http.StatusInternalServerError)

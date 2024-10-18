@@ -13,32 +13,22 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/BurntSushi/toml"
 	"github.com/claygod/microservice/app"
+	gocfg "github.com/dsbasko/go-cfg"
 	"github.com/pborman/getopt"
 )
 
 const (
-	defaultConfig               = "./config/config.toml"
-	defaultUseEnv               = "false"
-	envFieldsTag                = "env"
-	shutdownTime  time.Duration = 1 * time.Minute // shutdown time limit
+	defaultConfig               = "./config/config.toml" // alternative "./config/config.yml"
+	shutdownTime  time.Duration = 1 * time.Minute        // shutdown time limit
 )
 
-// Main
 func main() {
 	shutdown := make(chan bool)
 
 	params := getCommandLineParameters()
 
-	cnf, err := loadConfig(*params.ConfigPath)
-	if err != nil {
-		panic(err)
-	}
-
-	if params.EnvEnable != nil && *params.EnvEnable != defaultUseEnv {
-		cnf.LoadEnvironment(envFieldsTag)
-	}
+	cnf := loadConfigWithEnv(*params.ConfigPath)
 
 	cmd, err := app.New(cnf)
 	if err != nil {
@@ -62,7 +52,6 @@ func main() {
 func getCommandLineParameters() *commandLineParameters {
 	params := &commandLineParameters{
 		ConfigPath: getopt.StringLong("config", 'c', defaultConfig, "Path to config file"),
-		EnvEnable:  getopt.StringLong("env", 'e', defaultUseEnv, "Use environment variables in configuration "),
 	}
 
 	getopt.Parse()
@@ -76,16 +65,17 @@ type commandLineParameters struct {
 	EnvEnable *string
 }
 
-func loadConfig(path string) (*app.Config, error) {
+func loadConfigWithEnv(path string) *app.Config {
 	var config app.Config
 
-	_, err := toml.DecodeFile(path, &config)
+	gocfg.MustReadFile(path, &config)
+	gocfg.MustReadEnv(&config)
 
-	return &config, err
+	return &config
 }
 
 func gracefulStop(shutdown chan bool) {
-	var gracefulStop = make(chan os.Signal)
+	var gracefulStop = make(chan os.Signal, 1)
 
 	signal.Notify(gracefulStop,
 		syscall.SIGHUP,
@@ -95,7 +85,6 @@ func gracefulStop(shutdown chan bool) {
 
 	go func() {
 		<-gracefulStop
-		// fmt.Printf("caught sig: %+v", sig)
 		shutdown <- true
 	}()
 }

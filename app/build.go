@@ -19,8 +19,9 @@ import (
 
 func New(cnf *Config) (*Application, error) {
 	fooRepo := foo.New(startstop.New(1*time.Second), logrus.New().WithField("service", cnf.FooRepo.Title), cnf.FooRepo)
-	barGate := bar.New(startstop.New(1*time.Second), logrus.New().WithField("service", cnf.BarGate.Title), cnf.BarGate)
-	fbi := usecases.NewFooBarInteractor(startstop.New(1*time.Second), &cnf.Interactor, fooRepo, barGate)
+	gateBar := bar.New(startstop.New(1*time.Second), logrus.New().WithField("service", cnf.GateBar.Title), cnf.GateBar)
+	fbi := usecases.NewFooBarInteractor(startstop.New(1*time.Second), cnf.Interactor, fooRepo, gateBar)
+
 	mtr, err := metrics.New()
 	if err != nil {
 		return nil, err
@@ -31,7 +32,7 @@ func New(cnf *Config) (*Application, error) {
 
 	app := &Application{
 		logger:    logrus.New().WithField("service", "app"),
-		listToRun: []Item{fooRepo, barGate, fbi, gateIn},
+		listToRun: []Item{fooRepo, gateBar, fbi, gateIn},
 	}
 
 	return app, nil

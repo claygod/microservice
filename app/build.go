@@ -5,10 +5,10 @@ package app
 // Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
+	"log/slog"
 	"time"
 
 	"github.com/claygod/tools/startstop"
-	"github.com/sirupsen/logrus"
 
 	"github.com/claygod/microservice/services/gateways/bar"
 	"github.com/claygod/microservice/services/gateways/gatein"
@@ -18,8 +18,9 @@ import (
 )
 
 func New(cnf *Config) (*Application, error) {
-	fooRepo := foo.New(startstop.New(1*time.Second), logrus.New().WithField("service", cnf.FooRepo.Title), cnf.FooRepo)
-	gateBar := bar.New(startstop.New(1*time.Second), logrus.New().WithField("service", cnf.GateBar.Title), cnf.GateBar)
+	slog.With("service", cnf.FooRepo.Title)
+	fooRepo := foo.New(startstop.New(1*time.Second), slog.With("service", cnf.FooRepo.Title), cnf.FooRepo)
+	gateBar := bar.New(startstop.New(1*time.Second), slog.With("service", cnf.FooRepo.Title), cnf.GateBar)
 	fbi := usecases.NewFooBarInteractor(startstop.New(1*time.Second), cnf.Interactor, fooRepo, gateBar)
 
 	mtr, err := metrics.New()
@@ -27,11 +28,10 @@ func New(cnf *Config) (*Application, error) {
 		return nil, err
 	}
 
-	lgGateIn := logrus.New().WithField("service", cnf.GateIn.Title)
-	gateIn := gatein.New(startstop.New(1*time.Second), lgGateIn, cnf.GateIn, fbi, mtr)
+	gateIn := gatein.New(startstop.New(1*time.Second), slog.With("service", cnf.GateIn.Title), cnf.GateIn, fbi, mtr)
 
 	app := &Application{
-		logger:    logrus.New().WithField("service", "app"),
+		logger:    slog.With("service", "app"),
 		listToRun: []Item{fooRepo, gateBar, fbi, gateIn},
 	}
 

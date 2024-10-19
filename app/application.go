@@ -6,12 +6,11 @@ package app
 
 import (
 	"fmt"
-
-	"github.com/sirupsen/logrus"
+	"log/slog"
 )
 
 type Application struct {
-	logger    *logrus.Entry
+	logger    *slog.Logger
 	listToRun []Item
 }
 
@@ -19,7 +18,7 @@ func (a *Application) Start() error {
 	err := a.exeStartList(a.listToRun)
 
 	if err != nil {
-		a.logger.Error(err)
+		a.logger.Error(err.Error())
 	} else {
 		a.logger.Info("Application is started")
 	}
@@ -31,7 +30,7 @@ func (a *Application) Stop() error {
 	err := a.exeStopList(a.listToRun)
 
 	if err != nil {
-		a.logger.Error(err)
+		a.logger.Error(err.Error())
 	} else {
 		a.logger.Info("Application is stopped")
 	}
@@ -58,7 +57,7 @@ func (a *Application) exeStopList(list []Item) error {
 
 	for i := len(list) - 1; i >= 0; i-- {
 		if err := list[i].Stop(); err != nil {
-			a.logger.Error(err)
+			a.logger.Error(err.Error())
 			allErr = fmt.Errorf("%v: %w", allErr, err)
 		}
 	}

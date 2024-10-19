@@ -9,17 +9,16 @@ import (
 	"encoding/json"
 	"errors"
 	"io"
+	"log/slog"
 	"net/http"
-	"time"
 
 	"github.com/claygod/microservice/usecases"
 	"github.com/julienschmidt/httprouter"
-	"github.com/sirupsen/logrus"
 )
 
 func (g *GateIn) WelcomeHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	if _, err := io.WriteString(w, "Welcome to service "+g.config.Title); err != nil {
-		lg := g.logger.WithField(headerRequestID, g.getReqID(req))
+		lg := g.logger.With(headerRequestID, g.getReqID(req))
 
 		g.writeError(lg, w, err, http.StatusInternalServerError)
 
@@ -30,8 +29,10 @@ func (g *GateIn) WelcomeHandler(w http.ResponseWriter, req *http.Request, _ http
 }
 
 func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	ctx, _ := context.WithTimeout(req.Context(), 30*time.Second)
-	lg := g.logger.WithField(headerRequestID, g.getReqID(req))
+	ctx, cancel := context.WithTimeout(req.Context(), reqTimeout)
+	defer cancel()
+
+	lg := g.logger.With(headerRequestID, g.getReqID(req))
 
 	result, err := g.foobarInteractor.GetBar(params.ByName("key"), ctx)
 
@@ -43,7 +44,6 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 		}
 
 		return
-
 	} else if result == nil {
 		g.writeError(lg, w, errors.New("not found"), http.StatusNotFound)
 
@@ -51,7 +51,6 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	}
 
 	out, err := json.Marshal(result)
-
 	if err != nil {
 		g.writeError(lg, w, err, http.StatusInternalServerError)
 
@@ -59,14 +58,15 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	}
 
 	go g.metrics.ResponceCode(http.StatusOK)
-	w.Write([]byte(out))
+	if _, err := w.Write(out); err != nil {
+		g.logger.Error(err.Error())
+	}
 }
 
 func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	lg := g.logger.WithField(headerRequestID, g.getReqID(req))
+	lg := g.logger.With(headerRequestID, g.getReqID(req))
 
 	out, err := json.Marshal(g.foobarInteractor.GetHealth())
-
 	if err != nil {
 		g.writeError(lg, w, err, http.StatusInternalServerError)
 
@@ -74,7 +74,9 @@ func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, pa
 	}
 
 	go g.metrics.ResponceCode(http.StatusOK)
-	w.Write([]byte(out))
+	if _, err := w.Write(out); err != nil {
+		g.logger.Error(err.Error())
+	}
 }
 
 func (g *GateIn) ReadynessHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
@@ -89,9 +91,9 @@ func (g *GateIn) Metrics(w http.ResponseWriter, req *http.Request, _ httprouter.
 	g.metrics.Handler().ServeHTTP(w, req)
 }
 
-func (g *GateIn) writeError(lg *logrus.Entry, w http.ResponseWriter, err error, status int) {
+func (g *GateIn) writeError(lg *slog.Logger, w http.ResponseWriter, err error, status int) {
 	go g.metrics.ResponceCode(status)
-	go lg.Error(err)
+	go lg.Error(err.Error())
 
 	http.Error(w, err.Error(), status)
 }

@@ -7,20 +7,24 @@ package gatein
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/julienschmidt/httprouter"
-	"github.com/sirupsen/logrus"
 
 	"github.com/claygod/microservice/domain"
 	"github.com/claygod/microservice/services/metrics"
 	"github.com/claygod/microservice/usecases"
 )
 
+const (
+	reqTimeout = 30 * time.Second
+)
+
 type GateIn struct {
 	hasp             domain.StartStopInterface
-	logger           *logrus.Entry
+	logger           *slog.Logger
 	router           *httprouter.Router
 	server           *http.Server
 	foobarInteractor *usecases.FooBarInteractor
@@ -28,8 +32,7 @@ type GateIn struct {
 	metrics          *metrics.Metrics
 }
 
-func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config,
-	fbi *usecases.FooBarInteractor, mtr *metrics.Metrics) *GateIn {
+func New(ss domain.StartStopInterface, lg *slog.Logger, cnf *Config, fbi *usecases.FooBarInteractor, mtr *metrics.Metrics) *GateIn {
 	g := &GateIn{
 		logger:           lg,
 		foobarInteractor: fbi,
@@ -56,8 +59,9 @@ func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config,
 	router.GET("/", g.middle(g.WelcomeHandler))
 
 	// service routes
-	router.GET("/health_check", g.middle(g.HealthCheckHandler)) // for SRE
-	router.GET("/readyness", g.middle(g.ReadynessHandler))      // for kubernetes
+	router.GET("/healthz/ready", g.middle(g.HealthCheckHandler)) // for SRE
+	router.GET("/healthz", g.middle(g.HealthCheckHandler))       // for kubernetes
+	router.GET("/readyness", g.middle(g.ReadynessHandler))       // for kubernetes
 	router.GET("/metrics", g.Metrics)
 
 	// public routes
@@ -77,17 +81,16 @@ func (g *GateIn) Start() error {
 	}
 
 	g.server = &http.Server{
-		Handler: g.router,
-		Addr:    g.config.Port,
-		// Good practice: enforce timeouts for servers you create!
-		// WriteTimeout: 15 * time.Second,
-		// ReadTimeout:  15 * time.Second,
+		Handler:      g.router,
+		Addr:         g.config.Port,
+		WriteTimeout: reqTimeout,
+		ReadTimeout:  reqTimeout,
 	}
 
 	go func() {
 		if err := g.server.ListenAndServe(); err != nil {
 			// cannot panic, because this probably is an intentional close
-			g.logger.Errorf("Httpserver: ListenAndServe() error: %s", err)
+			g.logger.Error(fmt.Sprintf("Httpserver: ListenAndServe() error: %s", err))
 		} else {
 			g.logger.Info("Httpserver: ListenAndServe() closing...")
 		}
@@ -101,17 +104,10 @@ func (g *GateIn) Stop() error {
 		return errors.New("gatein:failed to stop")
 	}
 
-	// ctx, cancel := context.WithTimeout(context.Background(), timeStopService)
-
-	// defer cancel()
-
-	// g.logger.Info(g.server.Shutdown(ctx)) // failure/timeout shutting down the server gracefully
-
 	return nil
 }
 
-func (g *GateIn) middle(f func(http.ResponseWriter, *http.Request,
-	httprouter.Params)) func(http.ResponseWriter, *http.Request, httprouter.Params) {
+func (g *GateIn) middle(f func(http.ResponseWriter, *http.Request, httprouter.Params)) func(http.ResponseWriter, *http.Request, httprouter.Params) {
 	return func(w http.ResponseWriter, req *http.Request, p httprouter.Params) {
 		timeStart := time.Now().UnixNano()
 
@@ -133,7 +129,7 @@ func (g *GateIn) middle(f func(http.ResponseWriter, *http.Request,
 			g.metrics.Request(req.URL.RequestURI(), time.Duration(durNano))
 
 			dur := durNano / nanoToMilli
-			go g.logger.WithField(headerRequestID, g.getReqID(req)).Info(fmt.Sprintf("duration: %d ms , link: %s", dur, req.URL.RequestURI()))
+			go g.logger.With(headerRequestID, g.getReqID(req)).Info(fmt.Sprintf("duration: %d ms , link: %s", dur, req.URL.RequestURI()))
 		}
 	}
 }

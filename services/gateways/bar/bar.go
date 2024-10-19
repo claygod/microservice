@@ -6,11 +6,16 @@ package bar
 
 import (
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/claygod/microservice/domain"
-	"github.com/sirupsen/logrus"
+)
+
+const (
+	secHelthBorder = 20
+	emptyString    = ""
 )
 
 /*
@@ -18,11 +23,11 @@ BarGate - mock gateway
 */
 type BarGate struct {
 	hasp   domain.StartStopInterface
-	logger *logrus.Entry
+	logger *slog.Logger
 	config *Config
 }
 
-func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config) *BarGate {
+func New(ss domain.StartStopInterface, lg *slog.Logger, cnf *Config) *BarGate {
 	return &BarGate{
 		hasp:   ss,
 		logger: lg,
@@ -38,19 +43,18 @@ func (b *BarGate) GetBar(barID string) (*domain.Bar, error) {
 	case barID == "hide": // not found
 		return nil, nil
 
-	case len(barID) == 0:
-		b.logger.Warn(fmt.Errorf("%s:length of id `%s` is zero", b.config.Title, barID))
+	case barID == emptyString:
+		b.logger.Warn(fmt.Sprintf("%s:length of id `%s` is zero", b.config.Title, barID))
 
 		return nil, nil
 
 	case len(barID) > b.config.MaxIDLenght:
-		b.logger.Warn(fmt.Errorf("%s:length of id `%s` is greater than %d", b.config.Title, barID, b.config.MaxIDLenght))
+		b.logger.Warn(fmt.Sprintf("%s:length of id `%s` is greater than %d", b.config.Title, barID, b.config.MaxIDLenght))
 
 		return nil, nil
 
 	default:
 		return &domain.Bar{Data: fmt.Sprintf("%s:%s", b.config.Prefix, barID)}, nil
-
 	}
 }
 
@@ -71,7 +75,7 @@ func (b *BarGate) Stop() error {
 }
 
 func (b *BarGate) CheckStatus() int {
-	if time.Now().Second() < 20 {
+	if time.Now().Second() < secHelthBorder {
 		return http.StatusServiceUnavailable
 	}
 
@@ -81,5 +85,5 @@ func (b *BarGate) CheckStatus() int {
 type Config struct {
 	Title       string `toml:"GATE_TITLE" yaml:"GATE_TITLE" env:"GATE_TITLE"`
 	Prefix      string `toml:"GATE_PREFIX" yaml:"GATE_PREFIX" env:"GATE_PREFIX"`
-	MaxIDLenght int    `toml:"GATE_MAX_ID_LENGHT" yaml:"GATE_MAX_ID_LENGHT" env:"GATE_MAX_ID_LENGHT"`
+	MaxIDLenght int    `toml:"GATE_MAX_ID_LENGTH" yaml:"GATE_MAX_ID_LENGTH" env:"GATE_MAX_ID_LENGTH"`
 }

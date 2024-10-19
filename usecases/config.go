@@ -15,6 +15,6 @@ type Config struct {
 }
 
 type HealthResponceStatus struct {
-	fooStore int `json:"foo_store"`
-	barGate  int `json:"bar_gate"`
+	FooStore int `json:"foo_store"`
+	BarGate  int `json:"bar_gate"`
 }

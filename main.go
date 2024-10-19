@@ -75,7 +75,7 @@ func loadConfigWithEnv(path string) *app.Config {
 }
 
 func gracefulStop(shutdown chan bool) {
-	var gracefulStop = make(chan os.Signal, 1)
+	gracefulStop := make(chan os.Signal, 1)
 
 	signal.Notify(gracefulStop,
 		syscall.SIGHUP,

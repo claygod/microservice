@@ -1,6 +1,6 @@
 module github.com/claygod/microservice
 
-go 1.22
+go 1.22.5
 
 require (
 	github.com/claygod/tools v0.0.0-20211122181936-bab1329a2e3d
@@ -25,6 +25,10 @@ require (
 	github.com/prometheus/common v0.26.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/ysmood/fetchup v0.2.4 // indirect
+	github.com/ysmood/golangci-lint v0.12.1 // indirect
+	go.uber.org/multierr v1.10.0 // indirect
+	go.uber.org/zap v1.27.0 // indirect
 	golang.org/x/sys v0.15.0 // indirect
 	google.golang.org/protobuf v1.26.0-rc.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect

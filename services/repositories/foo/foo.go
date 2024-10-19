@@ -7,11 +7,16 @@ package foo
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/claygod/microservice/domain"
-	"github.com/sirupsen/logrus"
+)
+
+const (
+	secHelthBorder = 20
+	emptyString    = ""
 )
 
 /*
@@ -19,11 +24,11 @@ FooRepo - mock repository
 */
 type FooRepo struct {
 	hasp   domain.StartStopInterface
-	logger *logrus.Entry
+	logger *slog.Logger
 	config *Config
 }
 
-func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config) *FooRepo {
+func New(ss domain.StartStopInterface, lg *slog.Logger, cnf *Config) *FooRepo {
 	return &FooRepo{
 		hasp:   ss,
 		logger: lg,
@@ -44,19 +49,18 @@ func (f *FooRepo) GetFoo(fooID string) (*domain.Foo, error) {
 	case fooID == "secret": // not found
 		return nil, nil
 
-	case len(fooID) == 0:
-		f.logger.Warn(fmt.Errorf("%s:length of id `%s` is zero", f.config.Title, fooID))
+	case fooID == emptyString:
+		f.logger.Warn(fmt.Sprintf("%s:length of id `%s` is zero", f.config.Title, fooID))
 
 		return nil, nil
 
 	case len(fooID) > f.config.MaxIDLenght:
-		f.logger.Warn(fmt.Errorf("%s:length of id `%s` is greater than %d", f.config.Title, fooID, f.config.MaxIDLenght))
+		f.logger.Warn(fmt.Sprintf("%s:length of id `%s` is greater than %d", f.config.Title, fooID, f.config.MaxIDLenght))
 
 		return nil, nil
 
 	default:
 		return &domain.Foo{BarID: f.config.Prefix + fooID}, nil
-
 	}
 }
 
@@ -77,7 +81,7 @@ func (f *FooRepo) Stop() error {
 }
 
 func (f *FooRepo) CheckStatus() int {
-	if time.Now().Second() < 15 {
+	if time.Now().Second() < secHelthBorder {
 		return http.StatusServiceUnavailable
 	}
 
@@ -87,5 +91,5 @@ func (f *FooRepo) CheckStatus() int {
 type Config struct {
 	Title       string `toml:"REPO_TITLE" yaml:"REPO_TITLE" env:"REPO_TITLE"`
 	Prefix      string `toml:"REPO_PREFIX" yaml:"REPO_PREFIX" env:"REPO_PREFIX"`
-	MaxIDLenght int    `toml:"REPO_MAX_ID_LENGHT" yaml:"REPO_MAX_ID_LENGHT" env:"REPO_MAX_ID_LENGHT"`
+	MaxIDLenght int    `toml:"REPO_MAX_ID_LENGTH" yaml:"REPO_MAX_ID_LENGTH" env:"REPO_MAX_ID_LENGTH"`
 }

@@ -16,7 +16,8 @@ http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-app
 Code in `/services/gateways/gatein/gatein.go`
 
 - `/` welcome handler
-- `/health_check` for SRE
+- `/healthz/ready` for SRE
+- `/healthz` for kubernetes
 - `/readyness` for kubernetes
 - `/metrics` prometheus metrics
 - `/piblic/v1/bar/:key` public route (example)

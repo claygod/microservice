@@ -15,7 +15,7 @@ import (
 )
 
 const (
-	secHelthBorder = 20
+	secHelthBorder = 5
 	emptyString    = ""
 )
 
@@ -81,7 +81,7 @@ func (f *FooRepo) Stop() error {
 }
 
 func (f *FooRepo) CheckStatus() int {
-	if time.Now().Second() < secHelthBorder {
+	if time.Now().Second() < secHelthBorder { // first 5 second error for example!!
 		return http.StatusServiceUnavailable
 	}
 
@@ -89,7 +89,7 @@ func (f *FooRepo) CheckStatus() int {
 }
 
 type Config struct {
-	Title       string `toml:"REPO_TITLE" yaml:"REPO_TITLE" env:"REPO_TITLE"`
-	Prefix      string `toml:"REPO_PREFIX" yaml:"REPO_PREFIX" env:"REPO_PREFIX"`
-	MaxIDLenght int    `toml:"REPO_MAX_ID_LENGTH" yaml:"REPO_MAX_ID_LENGTH" env:"REPO_MAX_ID_LENGTH"`
+	Title       string `toml:"repo_title" yaml:"repo_title" env:"REPO_TITLE"`
+	Prefix      string `toml:"repo_prefix" yaml:"repo_prefix" env:"REPO_PREFIX"`
+	MaxIDLenght int    `toml:"repo_max_id_length" yaml:"repo_max_id_length" env:"REPO_MAX_ID_LENGTH"`
 }

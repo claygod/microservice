@@ -14,7 +14,7 @@ import (
 )
 
 const (
-	secHelthBorder = 20
+	secHelthBorder = 5
 	emptyString    = ""
 )
 
@@ -75,7 +75,7 @@ func (b *BarGate) Stop() error {
 }
 
 func (b *BarGate) CheckStatus() int {
-	if time.Now().Second() < secHelthBorder {
+	if time.Now().Second() < secHelthBorder { // first 5 second error for example!!
 		return http.StatusServiceUnavailable
 	}
 
@@ -83,7 +83,7 @@ func (b *BarGate) CheckStatus() int {
 }
 
 type Config struct {
-	Title       string `toml:"GATE_TITLE" yaml:"GATE_TITLE" env:"GATE_TITLE"`
-	Prefix      string `toml:"GATE_PREFIX" yaml:"GATE_PREFIX" env:"GATE_PREFIX"`
-	MaxIDLenght int    `toml:"GATE_MAX_ID_LENGTH" yaml:"GATE_MAX_ID_LENGTH" env:"GATE_MAX_ID_LENGTH"`
+	Title       string `toml:"gate_title" yaml:"gate_title" env:"Gate_title"`
+	Prefix      string `toml:"gate_prefix" yaml:"gate_prefix" env:"GATE_PREFIX"`
+	MaxIDLenght int    `toml:"gate_max_id_length" yaml:"gate_max_id_length" env:"GATE_MAX_ID_LENGTH"`
 }

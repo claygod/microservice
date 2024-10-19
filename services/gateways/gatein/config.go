@@ -13,8 +13,8 @@ import (
 )
 
 type Config struct {
-	Title string `toml:"GATE_IN_TITLE" yaml:"GATE_IN_TITLE" env:"GATE_IN_TITLE"`
-	Port  string `toml:"GATE_IN_PORT" yaml:"GATE_IN_PORT" env:"GATE_IN_PORT"`
+	Title string `toml:"gate_in_title" yaml:"gate_in_title" env:"GATE_IN_TITLE"`
+	Port  string `toml:"gate_in_port" yaml:"gate_in_port" env:"GATE_IN_PORT"`
 }
 
 const (

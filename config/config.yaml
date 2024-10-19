@@ -1,0 +1,13 @@
+interactor:
+  inter_title: "foo-bar"
+gatein:
+  gate_in_title: "demo-microservice"
+  gate_in_port: ':8080'
+foorepo:
+  repo_title: "foo repo"
+  repo_prefix: "from"
+  repo_max_id_lenght: 10
+gatebar:
+  gate_bar_title: "bar gate"
+  gate_bar_prefix: "link"
+  gate_bar_max_id_lenght: 15

@@ -19,7 +19,7 @@ import (
 )
 
 const (
-	defaultConfig               = "./config/config.toml" // alternative "./config/config.yml"
+	defaultConfig               = "./config/config.yaml" // alternative "./config/config.toml"
 	shutdownTime  time.Duration = 1 * time.Minute        // shutdown time limit
 )
 
@@ -28,7 +28,10 @@ func main() {
 
 	params := getCommandLineParameters()
 
-	cnf := loadConfigWithEnv(*params.ConfigPath)
+	cnf, err := loadConfigWithEnv(*params.ConfigPath)
+	if err != nil {
+		panic(err)
+	}
 
 	cmd, err := app.New(cnf)
 	if err != nil {
@@ -65,13 +68,16 @@ type commandLineParameters struct {
 	EnvEnable *string
 }
 
-func loadConfigWithEnv(path string) *app.Config {
+func loadConfigWithEnv(path string) (*app.Config, error) {
 	var config app.Config
 
-	gocfg.MustReadFile(path, &config)
+	if err := gocfg.ReadFile(path, &config); err != nil {
+		return nil, err
+	}
+
 	gocfg.MustReadEnv(&config)
 
-	return &config
+	return &config, nil
 }
 
 func gracefulStop(shutdown chan bool) {

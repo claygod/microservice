@@ -2,7 +2,7 @@ package gatein
 
 // Microservice
 // Gate In
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"errors"
@@ -12,6 +12,9 @@ import (
 	"time"
 
 	"github.com/julienschmidt/httprouter"
+	"github.com/savaki/swag"
+	"github.com/savaki/swag/endpoint"
+	"github.com/savaki/swag/swagger"
 
 	"github.com/claygod/microservice/domain"
 	"github.com/claygod/microservice/services/metrics"
@@ -19,7 +22,9 @@ import (
 )
 
 const (
-	reqTimeout = 30 * time.Second
+	reqTimeout       = 30 * time.Second
+	swagYAMLFileName = "swagger.yaml"
+	emptyString      = ""
 )
 
 type GateIn struct {
@@ -30,6 +35,8 @@ type GateIn struct {
 	foobarInteractor *usecases.FooBarInteractor
 	config           *Config
 	metrics          *metrics.Metrics
+	swagAPI          *swagger.API
+	swagGenerated    bool
 }
 
 func New(ss domain.StartStopInterface, lg *slog.Logger, cnf *Config, fbi *usecases.FooBarInteractor, mtr *metrics.Metrics) *GateIn {
@@ -58,17 +65,38 @@ func New(ss domain.StartStopInterface, lg *slog.Logger, cnf *Config, fbi *usecas
 	// optional route
 	router.GET("/", g.middle(g.WelcomeHandler))
 
+	// public routes
+	router.GET("/piblic/v1/bar/:key", g.middle(g.GetBarHandler))
+	swagV1Bar := endpoint.New("get", "/piblic/v1/bar/{key}", "Find object bar by key",
+		endpoint.Handler(g.GetBarHandler),
+		endpoint.Path("key", "string", "key of object bar to return", true),
+		endpoint.Response(http.StatusOK, domain.Bar{Data: "three"}, "successful operation"),
+		endpoint.Response(http.StatusNotFound, emptyString, "not found"),
+		endpoint.Response(http.StatusInternalServerError, emptyString, "internal server error"),
+		// endpoint.Tags("section A"),
+	)
+
+	// private routes
+	// example: /private/v1/foo/:key
+
+	api := swag.New(
+		swag.Description(cnf.Title+" API"),
+		swag.Version("1.0"),
+		swag.Title(cnf.Title+" swagger"),
+		swag.ContactEmail("mail@mail.com"),
+		swag.BasePath("/public"),
+		swag.Endpoints(swagV1Bar),
+		// swag.Tag("section A", "this is section A", swag.TagURL("")),
+	)
+
+	g.swagAPI = api
+
 	// service routes
 	router.GET("/healthz/ready", g.middle(g.HealthCheckHandler)) // for SRE
 	router.GET("/healthz", g.middle(g.HealthCheckHandler))       // for kubernetes
 	router.GET("/readyness", g.middle(g.ReadynessHandler))       // for kubernetes
 	router.GET("/metrics", g.Metrics)
-
-	// public routes
-	router.GET("/piblic/v1/bar/:key", g.middle(g.GetBarHandler))
-
-	// private routes
-	// example: /private/v1/foo/:key
+	router.GET("/swagger", g.middle(g.SwaggerHandler))
 
 	g.router = router
 

@@ -2,7 +2,7 @@ package app
 
 // Microservice
 // Application
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"fmt"
@@ -16,7 +16,6 @@ type Application struct {
 
 func (a *Application) Start() error {
 	err := a.exeStartList(a.listToRun)
-
 	if err != nil {
 		a.logger.Error(err.Error())
 	} else {
@@ -28,7 +27,6 @@ func (a *Application) Start() error {
 
 func (a *Application) Stop() error {
 	err := a.exeStopList(a.listToRun)
-
 	if err != nil {
 		a.logger.Error(err.Error())
 	} else {

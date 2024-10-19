@@ -9,6 +9,8 @@ require (
 	github.com/julienschmidt/httprouter v1.3.0
 	github.com/pborman/getopt v1.1.0
 	github.com/prometheus/client_golang v1.11.0
+	github.com/savaki/swag v0.0.0-20170722173931-3a75479e44a3
+	sigs.k8s.io/yaml v1.4.0
 )
 
 require (
@@ -17,7 +19,6 @@ require (
 	github.com/caarlos0/env/v10 v10.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect

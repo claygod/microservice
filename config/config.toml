@@ -3,6 +3,7 @@
 [gatein]
 	gate_in_title			= "demo-microservice"
 	gate_in_port				= ":8080"
+	config_path				= "./config"
 [foorepo]
 	repo_title				= "foo repo"
 	repo_prefix				= "from"

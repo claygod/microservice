@@ -27,11 +27,7 @@ fmt:
 
 build:
 	$(info ************ BUILD TO ./build/app ************)
-	CGO_ENABLED=0 GOOS=linux go build  -ldflags "${LDFLAGS}" -a -installsuffix cgo -o=vi-billing-plugin ./main.go
-
-# swag:
-# 	swag init --parseDependency ${SWAGGER_ARG} --output ./api/service/v1
-# 	swag fmt ${SWAGGER_ARG}
+	CGO_ENABLED=0 GOOS=linux go build  -ldflags "${LDFLAGS}" -a -installsuffix cgo -o=micro ./main.go
 
 mod/download:
 	$(info ************ MOD DOWNLOAD ************)
@@ -55,3 +51,6 @@ generate:
 	$(info ************ GENERATE MOCKS ************)
 	go generate -v ./...
 
+run:
+	$(info ************ GENERATE MOCKS ************)
+	./micro

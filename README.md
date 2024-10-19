@@ -132,7 +132,7 @@ Microservice does not claim the laurels of the only true solution, but on occasi
 
 ## Give us a star!
 
-> [!NOTE]
+> [!TIP]
 > If you like or are using this project to learn or start your solution, please give it a star. Thank you!
 
 ## License

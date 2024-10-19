@@ -2,7 +2,7 @@ package gatein
 
 // Microservice
 // Gate In (config)
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"fmt"
@@ -13,8 +13,9 @@ import (
 )
 
 type Config struct {
-	Title *string `env:"GATEIN_TITLE"`
-	Port  *string `env:"GATEIN_PORT"`
+	Title      string `toml:"gate_in_title" yaml:"gate_in_title" env:"GATE_IN_TITLE"`
+	Port       string `toml:"gate_in_port" yaml:"gate_in_port" env:"GATE_IN_PORT"`
+	ConfigPath string `toml:"config_path" yaml:"config_path" env:"CONFIG_PATH"`
 }
 
 const (
@@ -28,7 +29,7 @@ func (g *GateIn) getReqID(req *http.Request) string {
 	x := req.Header.Get(headerRequestID)
 
 	if x == "" {
-		x = fmt.Sprintf("%s-%s", *g.config.Title, uuid.New().String())
+		x = fmt.Sprintf("%s-%s", g.config.Title, uuid.New().String())
 	}
 
 	return x

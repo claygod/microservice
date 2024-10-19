@@ -39,7 +39,7 @@ func (f *FooBarInteractor) GetBar(key string, ctx context.Context) (*domain.Bar,
 		return nil, err
 	}
 
-	if err = ctx.Err(); err != nil {
+	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
 
@@ -64,7 +64,7 @@ func (f *FooBarInteractor) Stop() error {
 
 func (f *FooBarInteractor) GetHealth() *HealthResponceStatus {
 	return &HealthResponceStatus{
-		fooStore: f.fooStore.CheckStatus(),
-		barGate:  f.barGate.CheckStatus(),
+		FooStore: f.fooStore.CheckStatus(),
+		BarGate:  f.barGate.CheckStatus(),
 	}
 }

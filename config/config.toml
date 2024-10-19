@@ -1,15 +1,14 @@
-[Main]
-	Addr				= "1234"
-[Interactor]
-	Title			= "foo-bar"
-[GateIn]
-	Title			= "gatein"
-	Port				= ":8080"
-[FooRepo]
-	Title			= "foo repo"
-	Prefix			= "from"
-	MaxIDLenght		= 10
-[BarGate]
-	Title			= "bar gate"
-	Prefix			= "link"
-	MaxIDLenght		= 15
+[interactor]
+	inter_title				= "foo-bar"
+[gatein]
+	gate_in_title			= "demo-microservice"
+	gate_in_port				= ":8080"
+	config_path				= "./config"
+[foorepo]
+	repo_title				= "foo repo"
+	repo_prefix				= "from"
+	repo_max_id_lenght		= 10
+[gatebar]
+	gate_bar_title			= "bar gate"
+	gate_bar_prefix			= "link"
+	gate_bar_max_id_lenght	= 15

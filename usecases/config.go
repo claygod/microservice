@@ -11,10 +11,10 @@ import (
 var ErrUserBadRequest = errors.New("bad request")
 
 type Config struct {
-	Title *string `env:"USECASES_TITLE"`
+	Title string `toml:"inter_title" yaml:"inter_title" env:"INTER_TITLE"`
 }
 
 type HealthResponceStatus struct {
-	fooStore int `json:"foo_store"`
-	barGate  int `json:"bar_gate"`
+	FooStore int `json:"foo_store"`
+	BarGate  int `json:"bar_gate"`
 }

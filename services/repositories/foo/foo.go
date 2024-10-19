@@ -2,16 +2,21 @@ package foo
 
 // Microservice
 // Foo repository
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"errors"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"time"
 
 	"github.com/claygod/microservice/domain"
-	"github.com/sirupsen/logrus"
+)
+
+const (
+	secHelthBorder = 5
+	emptyString    = ""
 )
 
 /*
@@ -19,11 +24,11 @@ FooRepo - mock repository
 */
 type FooRepo struct {
 	hasp   domain.StartStopInterface
-	logger *logrus.Entry
+	logger *slog.Logger
 	config *Config
 }
 
-func New(ss domain.StartStopInterface, lg *logrus.Entry, cnf *Config) *FooRepo {
+func New(ss domain.StartStopInterface, lg *slog.Logger, cnf *Config) *FooRepo {
 	return &FooRepo{
 		hasp:   ss,
 		logger: lg,
@@ -44,19 +49,18 @@ func (f *FooRepo) GetFoo(fooID string) (*domain.Foo, error) {
 	case fooID == "secret": // not found
 		return nil, nil
 
-	case len(fooID) == 0:
-		f.logger.Warn(fmt.Errorf("%s:length of id `%s` is zero", f.config.Title, fooID))
+	case fooID == emptyString:
+		f.logger.Warn(fmt.Sprintf("%s:length of id `%s` is zero", f.config.Title, fooID))
 
 		return nil, nil
 
-	case len(fooID) > *f.config.MaxIDLenght:
-		f.logger.Warn(fmt.Errorf("%s:length of id `%s` is greater than %d", f.config.Title, fooID, f.config.MaxIDLenght))
+	case len(fooID) > f.config.MaxIDLenght:
+		f.logger.Warn(fmt.Sprintf("%s:length of id `%s` is greater than %d", f.config.Title, fooID, f.config.MaxIDLenght))
 
 		return nil, nil
 
 	default:
 		return &domain.Foo{BarID: f.config.Prefix + fooID}, nil
-
 	}
 }
 
@@ -77,7 +81,7 @@ func (f *FooRepo) Stop() error {
 }
 
 func (f *FooRepo) CheckStatus() int {
-	if time.Now().Second() < 15 {
+	if time.Now().Second() < secHelthBorder { // first 5 second error for example!!
 		return http.StatusServiceUnavailable
 	}
 
@@ -85,7 +89,7 @@ func (f *FooRepo) CheckStatus() int {
 }
 
 type Config struct {
-	Title       string
-	Prefix      string
-	MaxIDLenght *int `env:"FOO_MAX_ID_LENGHT"`
+	Title       string `toml:"repo_title" yaml:"repo_title" env:"REPO_TITLE"`
+	Prefix      string `toml:"repo_prefix" yaml:"repo_prefix" env:"REPO_PREFIX"`
+	MaxIDLenght int    `toml:"repo_max_id_length" yaml:"repo_max_id_length" env:"REPO_MAX_ID_LENGTH"`
 }

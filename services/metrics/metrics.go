@@ -2,7 +2,7 @@ package metrics
 
 // Microservice
 // Metrics
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"net/http"
@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/prometheus/client_golang/prometheus/collectors"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
@@ -34,7 +35,7 @@ func New() (*Metrics, error) {
 	}
 
 	m.registry.MustRegister(
-		prometheus.NewGoCollector(),
+		collectors.NewGoCollector(),
 	)
 
 	if err := m.regKits(m.kits); err != nil {

@@ -2,24 +2,31 @@ package gatein
 
 // Microservice
 // Gate In (handlers)
-// Copyright © 2021 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
+// Copyright © 2021-2024 Eduard Sesigin. All rights reserved. Contacts: <claygod@yandex.ru>
 
 import (
 	"context"
 	"encoding/json"
 	"errors"
 	"io"
+	"io/fs"
+	"log/slog"
 	"net/http"
-	"time"
+	"os"
+	"strings"
 
 	"github.com/claygod/microservice/usecases"
 	"github.com/julienschmidt/httprouter"
-	"github.com/sirupsen/logrus"
+	"sigs.k8s.io/yaml"
+)
+
+const (
+	filePerm = fs.FileMode(0x644)
 )
 
 func (g *GateIn) WelcomeHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
-	if _, err := io.WriteString(w, "Welcome to Service!..."); err != nil {
-		lg := g.logger.WithField(headerRequestID, g.getReqID(req))
+	if _, err := io.WriteString(w, "Welcome to service "+g.config.Title); err != nil {
+		lg := g.logger.With(headerRequestID, g.getReqID(req))
 
 		g.writeError(lg, w, err, http.StatusInternalServerError)
 
@@ -30,8 +37,10 @@ func (g *GateIn) WelcomeHandler(w http.ResponseWriter, req *http.Request, _ http
 }
 
 func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	ctx, _ := context.WithTimeout(req.Context(), 30*time.Second)
-	lg := g.logger.WithField(headerRequestID, g.getReqID(req))
+	ctx, cancel := context.WithTimeout(req.Context(), reqTimeout)
+	defer cancel()
+
+	lg := g.logger.With(headerRequestID, g.getReqID(req))
 
 	result, err := g.foobarInteractor.GetBar(params.ByName("key"), ctx)
 
@@ -43,7 +52,6 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 		}
 
 		return
-
 	} else if result == nil {
 		g.writeError(lg, w, errors.New("not found"), http.StatusNotFound)
 
@@ -51,7 +59,6 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	}
 
 	out, err := json.Marshal(result)
-
 	if err != nil {
 		g.writeError(lg, w, err, http.StatusInternalServerError)
 
@@ -59,14 +66,15 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	}
 
 	go g.metrics.ResponceCode(http.StatusOK)
-	w.Write([]byte(out))
+	if _, err := w.Write(out); err != nil {
+		g.logger.Error(err.Error())
+	}
 }
 
 func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
-	lg := g.logger.WithField(headerRequestID, g.getReqID(req))
+	lg := g.logger.With(headerRequestID, g.getReqID(req))
 
 	out, err := json.Marshal(g.foobarInteractor.GetHealth())
-
 	if err != nil {
 		g.writeError(lg, w, err, http.StatusInternalServerError)
 
@@ -74,7 +82,9 @@ func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, pa
 	}
 
 	go g.metrics.ResponceCode(http.StatusOK)
-	w.Write([]byte(out))
+	if _, err := w.Write(out); err != nil {
+		g.logger.Error(err.Error())
+	}
 }
 
 func (g *GateIn) ReadynessHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
@@ -89,9 +99,55 @@ func (g *GateIn) Metrics(w http.ResponseWriter, req *http.Request, _ httprouter.
 	g.metrics.Handler().ServeHTTP(w, req)
 }
 
-func (g *GateIn) writeError(lg *logrus.Entry, w http.ResponseWriter, err error, status int) {
+func (g *GateIn) SwaggerHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
+	g.swagAPI.Host = req.Host
+	g.swagAPI.Schemes[0] = g.schemeFromProto(req.Proto)
+
+	apij, err := json.Marshal(g.swagAPI)
+	if err != nil {
+		g.logger.Error(err.Error())
+		g.writeError(g.logger, w, err, http.StatusInternalServerError)
+	} else {
+		apij = []byte(strings.ReplaceAll(string(apij), `"tags":null,`, ""))
+
+		if !g.swagGenerated {
+			if err := g.saveSwaggerToFile(apij); err != nil {
+				g.logger.Error(err.Error())
+			} else {
+				g.swagGenerated = true
+			}
+		}
+
+		w.WriteHeader(http.StatusOK)
+		w.Header().Set("Content-Type", "application/json")
+
+		if _, err := w.Write(apij); err != nil {
+			g.logger.Error(err.Error())
+		}
+	}
+}
+
+func (g *GateIn) schemeFromProto(proto string) string {
+	if strings.Contains(proto, "HTTPS") {
+		return "https"
+	}
+	return "http"
+}
+
+func (g *GateIn) saveSwaggerToFile(apij []byte) error {
+	y, err := yaml.JSONToYAML(apij)
+	if err != nil {
+		return err
+	}
+
+	fullPath := g.config.ConfigPath + "/" + swagYAMLFileName
+
+	return os.WriteFile(fullPath, y, filePerm)
+}
+
+func (g *GateIn) writeError(lg *slog.Logger, w http.ResponseWriter, err error, status int) {
 	go g.metrics.ResponceCode(status)
-	go lg.Error(err)
+	go lg.Error(err.Error())
 
 	http.Error(w, err.Error(), status)
 }

@@ -16,11 +16,11 @@ http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-app
 ```
 git clone ginhub.com/claygod/microservice
 cd microservice
-make Build
+make build
 make run
 ```
 
-Open in web-browser link `localhost:8080`
+Go to `localhost:8080` in your web browser
 
 ## Endpoints
 
@@ -139,4 +139,6 @@ Microservice does not claim the laurels of the only true solution, but on occasi
 
 GNU GENERAL PUBLIC LICENSE Version 3
 
-### Copyright © 2017-2024 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru
+### Copyright 
+
+Copyright © 2017-2024 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru

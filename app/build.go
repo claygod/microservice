@@ -17,17 +17,21 @@ import (
 	"github.com/claygod/microservice/usecases"
 )
 
+const (
+	buildDefauldPause = 1 * time.Second
+)
+
 func New(cnf *Config) (*Application, error) {
 	slog.With("service", cnf.FooRepo.Title)
-	fooRepo := foo.New(startstop.New(1*time.Second), slog.With("service", cnf.FooRepo.Title), cnf.FooRepo)
-	gateBar := bar.New(startstop.New(1*time.Second), slog.With("service", cnf.FooRepo.Title), cnf.GateBar)
-	fbi := usecases.NewFooBarInteractor(startstop.New(1*time.Second), cnf.Interactor, fooRepo, gateBar)
 
 	mtr, err := metrics.New()
 	if err != nil {
 		return nil, err
 	}
 
+	fooRepo := foo.New(startstop.New(buildDefauldPause), slog.With("service", cnf.FooRepo.Title), cnf.FooRepo)
+	gateBar := bar.New(startstop.New(buildDefauldPause), slog.With("service", cnf.FooRepo.Title), cnf.GateBar)
+	fbi := usecases.NewFooBarInteractor(startstop.New(buildDefauldPause), cnf.Interactor, fooRepo, gateBar)
 	gateIn := gatein.New(startstop.New(1*time.Second), slog.With("service", cnf.GateIn.Title), cnf.GateIn, fbi, mtr)
 
 	app := &Application{

@@ -16,6 +16,7 @@ import (
 	"strings"
 
 	"github.com/claygod/microservice/usecases"
+	"github.com/go-playground/validator/v10"
 	"github.com/julienschmidt/httprouter"
 	"sigs.k8s.io/yaml"
 )
@@ -41,8 +42,16 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	defer cancel()
 
 	lg := g.logger.With(headerRequestID, g.getReqID(req))
+	key := params.ByName("key")
+	validate := validator.New(validator.WithRequiredStructEnabled())
 
-	result, err := g.foobarInteractor.GetBar(params.ByName("key"), ctx)
+	if err := validate.Var(key, "alphanum,gte=0,lte=30"); err != nil {
+		g.writeError(lg, w, err, http.StatusBadRequest)
+
+		return
+	}
+
+	result, err := g.foobarInteractor.GetBar(ctx, key)
 
 	if err != nil {
 		if errors.Is(err, usecases.ErrUserBadRequest) {
@@ -71,7 +80,7 @@ func (g *GateIn) GetBarHandler(w http.ResponseWriter, req *http.Request, params 
 	}
 }
 
-func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
+func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	lg := g.logger.With(headerRequestID, g.getReqID(req))
 
 	out, err := json.Marshal(g.foobarInteractor.GetHealth())
@@ -87,7 +96,7 @@ func (g *GateIn) HealthCheckHandler(w http.ResponseWriter, req *http.Request, pa
 	}
 }
 
-func (g *GateIn) ReadynessHandler(w http.ResponseWriter, req *http.Request, params httprouter.Params) {
+func (g *GateIn) ReadynessHandler(w http.ResponseWriter, req *http.Request, _ httprouter.Params) {
 	if g.hasp.IsReady() || g.hasp.IsRun() {
 		w.WriteHeader(http.StatusOK)
 	} else {

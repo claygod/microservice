@@ -46,7 +46,7 @@ Example requests:
 
 - localhost:8080/piblic/v1/bar/one -> {"Data":"three"}
 - localhost:8080/piblic/v1/bar/secret -> response 404
-- localhost:8080/piblic/v1/bar/looonnngggggkkkeeyyyyyyy -> response 404
+- localhost:8080/piblic/v1/bar/looooonnngggoooooggkkkeeyyyyyyy -> response 400 (not valid)
 - localhost:8080/healthz/ready -> minute first 5 sec - 503 after 200 (for example!)
 - localhost:8080/healthz -> minute first 5 sec - 503 after 200 (for example!)
 - localhost:8080/readyness -> response 200
@@ -106,15 +106,23 @@ Specify in the command line another file:
 	github.com/beorn7/perks v1.0.1 // indirect
 	github.com/caarlos0/env/v10 v10.0.0 // indirect
 	github.com/cespare/xxhash/v2 v2.1.1 // indirect
+	github.com/gabriel-vasile/mimetype v1.4.3 // indirect
+	github.com/go-playground/locales v0.14.1 // indirect
+	github.com/go-playground/universal-translator v0.18.1 // indirect
+	github.com/go-playground/validator/v10 v10.22.1 // indirect
 	github.com/golang/protobuf v1.4.3 // indirect
 	github.com/joho/godotenv v1.5.1 // indirect
 	github.com/kr/text v0.2.0 // indirect
+	github.com/leodido/go-urn v1.4.0 // indirect
 	github.com/matttproud/golang_protobuf_extensions v1.0.1 // indirect
 	github.com/prometheus/client_model v0.2.0 // indirect
 	github.com/prometheus/common v0.26.0 // indirect
 	github.com/prometheus/procfs v0.6.0 // indirect
 	github.com/spf13/pflag v1.0.5 // indirect
-	golang.org/x/sys v0.15.0 // indirect
+	golang.org/x/crypto v0.19.0 // indirect
+	golang.org/x/net v0.21.0 // indirect
+	golang.org/x/sys v0.17.0 // indirect
+	golang.org/x/text v0.14.0 // indirect
 	google.golang.org/protobuf v1.26.0-rc.1 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 
@@ -122,7 +130,7 @@ Specify in the command line another file:
 
 - [x] Use environment variables in configuration
 - [x] Add support for metrics
-- [ ] Input validate
+- [x] Input validate
 - [x] Swagger 2.0
 - [ ] Use protocol gRPC
 

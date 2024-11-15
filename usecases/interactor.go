@@ -27,7 +27,7 @@ func NewFooBarInteractor(ss domain.StartStopInterface, cnf *Config, fs domain.Re
 	}
 }
 
-func (f *FooBarInteractor) GetBar(key string, ctx context.Context) (*domain.Bar, error) {
+func (f *FooBarInteractor) GetBar(ctx context.Context, key string) (*domain.Bar, error) {
 	if !f.hasp.Add() {
 		return nil, fmt.Errorf("%s:service is stopped", f.config.Title)
 	}

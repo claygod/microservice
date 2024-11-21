@@ -22,6 +22,22 @@ make run
 
 Go to `localhost:8080` in your web browser
 
+### Version
+
+```
+git clone ginhub.com/claygod/microservice
+cd microservice
+make build
+make version
+```
+OR
+```
+git clone ginhub.com/claygod/microservice
+cd microservice
+make build
+micro --version
+```
+
 ## Endpoints
 
 Code in `/services/gateways/gatein/gatein.go`
@@ -132,6 +148,7 @@ Specify in the command line another file:
 - [x] Add support for metrics
 - [x] Input validate
 - [x] Swagger 2.0
+- [x] "version" command line
 - [ ] Use protocol gRPC
 
 ## Conclusion

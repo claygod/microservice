@@ -21,9 +21,15 @@ import (
 const (
 	defaultConfig               = "./config/config.yaml" // alternative "./config/config.toml"
 	shutdownTime  time.Duration = 1 * time.Minute        // shutdown time limit
+	vers1cli                    = "version"
+	vers2cli                    = "--version"
 )
 
 func main() {
+	if isVersionReq() {
+		return
+	}
+
 	shutdown := make(chan bool)
 
 	params := getCommandLineParameters()
@@ -60,6 +66,23 @@ func getCommandLineParameters() *commandLineParameters {
 	getopt.Parse()
 
 	return params
+}
+
+func isVersionReq() bool {
+	for _, arg := range os.Args {
+		if arg == vers1cli || arg == vers2cli {
+			vers, err := os.ReadFile("VERSION")
+			if err != nil {
+				return false
+			}
+
+			fmt.Println(string(vers))
+
+			return true
+		}
+	}
+
+	return false
 }
 
 type commandLineParameters struct {

@@ -1,5 +1,6 @@
 microservice
+micro
 *.go-
 golangci.yml
 .golangci.yml
-
+.env

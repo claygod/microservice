@@ -52,5 +52,9 @@ generate:
 	go generate -v ./...
 
 run:
-	$(info ************ GENERATE MOCKS ************)
+	$(info ************ RUN ************)
 	./micro
+
+version:
+	$(info ************ VERSION ************)
+	./micro --version

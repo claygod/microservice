@@ -4,3 +4,4 @@ micro
 golangci.yml
 .golangci.yml
 .env
+./vscode

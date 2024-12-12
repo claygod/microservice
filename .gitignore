@@ -5,3 +5,4 @@ golangci.yml
 .golangci.yml
 .env
 ./vscode
+.vscode

@@ -149,6 +149,9 @@ Specify in the command line another file:
 - [x] Input validate
 - [x] Swagger 2.0
 - [x] "version" command line
+- [ ] Dockerfile
+- [ ] docker_run in Makefile
+- [ ] docker_push in Makefile
 - [ ] Use protocol gRPC
 
 ## Conclusion

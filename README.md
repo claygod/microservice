@@ -150,6 +150,7 @@ Specify in the command line another file:
 - [x] Swagger 2.0
 - [x] "version" command line
 - [ ] Dockerfile
+- [ ] docker_build in Makefile
 - [ ] docker_run in Makefile
 - [ ] docker_push in Makefile
 - [ ] Use protocol gRPC

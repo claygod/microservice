@@ -58,3 +58,11 @@ run:
 version:
 	$(info ************ VERSION ************)
 	./micro --version
+	
+docker_build:
+	$(info ************ DOCKER BUILD ************)
+	sudo docker build -t micro:v1 .
+	
+docker_run:
+	$(info ************ DOCKER RUN ************)
+	docker run -it --rm -p 8080:8080 micro:v1 ls -l /src

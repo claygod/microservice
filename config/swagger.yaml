@@ -19,11 +19,11 @@ info:
   title: Yo-ho-ho! swagger
   version: "1.0"
 paths:
-  /piblic/v1/bar/{key}:
+  /public/v1/bar/{key}:
     get:
       consumes:
       - application/json
-      operationId: getPiblicV1BarKey
+      operationId: getpublicV1BarKey
       parameters:
       - description: key of object bar to return
         in: path

@@ -66,8 +66,8 @@ func New(ss domain.StartStopInterface, lg *slog.Logger, cnf *Config, fbi *usecas
 	router.GET("/", g.middle(g.WelcomeHandler))
 
 	// public routes
-	router.GET("/piblic/v1/bar/:key", g.middle(g.GetBarHandler))
-	swagV1Bar := endpoint.New("get", "/piblic/v1/bar/{key}", "Find object bar by key",
+	router.GET("/public/v1/bar/:key", g.middle(g.GetBarHandler))
+	swagV1Bar := endpoint.New("get", "/public/v1/bar/{key}", "Find object bar by key",
 		endpoint.Handler(g.GetBarHandler),
 		endpoint.Path("key", "string", "key of object bar to return", true),
 		endpoint.Response(http.StatusOK, domain.Bar{Data: "three"}, "successful operation"),

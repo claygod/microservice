@@ -6,7 +6,7 @@
 [![stars](https://img.shields.io/github/stars/claygod/microservice)](https://github.com/claygod/microservice/stargazers)
 [![Go Report Card](https://goreportcard.com/badge/github.com/claygod/microservice)](https://goreportcard.com/report/github.com/claygod/microservice)
 
-The framework for the creation of microservices, written in Golang. 
+The framework for the creation of microservices, written in Golang.
 This package is implemented using clean architecture principles.
 A good article on implementing these principles in Golang:
 http://manuel.kiessling.net/2012/09/28/applying-the-clean-architecture-to-go-applications/
@@ -48,10 +48,10 @@ Code in `/services/gateways/gatein/gatein.go`
 - `/readyness` for kubernetes
 - `/metrics` prometheus metrics
 - `/swagger` generate swagger fo api
-- `/piblic/v1/bar/:key` public route (example)
+- `/public/v1/bar/:key` public route (example)
 
 > [!CAUTION]
-> Requests from an external balancer should be forwarded not to the root of endpoints, but to `/public`. 
+> Requests from an external balancer should be forwarded not to the root of endpoints, but to `/public`.
 > Then service routes with metrics and other private information will be inaccessible to external users.
 
 ### Using
@@ -60,9 +60,9 @@ Build and run main.go
 
 Example requests:
 
-- localhost:8080/piblic/v1/bar/one -> {"Data":"three"}
-- localhost:8080/piblic/v1/bar/secret -> response 404
-- localhost:8080/piblic/v1/bar/looooonnngggoooooggkkkeeyyyyyyy -> response 400 (not valid)
+- localhost:8080/public/v1/bar/one -> {"Data":"three"}
+- localhost:8080/public/v1/bar/secret -> response 404
+- localhost:8080/public/v1/bar/looooonnngggoooooggkkkeeyyyyyyy -> response 400 (not valid)
 - localhost:8080/healthz/ready -> minute first 5 sec - 503 after 200 (for example!)
 - localhost:8080/healthz -> minute first 5 sec - 503 after 200 (for example!)
 - localhost:8080/readyness -> response 200
@@ -70,7 +70,7 @@ Example requests:
 
 ### Swagger
 
-After starting the application, the first time route `/swagger` is called, 
+After starting the application, the first time route `/swagger` is called,
 the swagger file `config/swagger.yaml` is regenerated.
 
 ### Environment
@@ -141,7 +141,7 @@ Specify in the command line another file:
 	golang.org/x/text v0.21.0 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	
+
 ## ToDo
 
 - [x] Use environment variables in configuration
@@ -168,6 +168,6 @@ Microservice does not claim the laurels of the only true solution, but on occasi
 
 GNU GENERAL PUBLIC LICENSE Version 3
 
-### Copyright 
+### Copyright
 
 Copyright © 2017-2025 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru

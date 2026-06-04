@@ -170,4 +170,4 @@ GNU GENERAL PUBLIC LICENSE Version 3
 
 ### Copyright
 
-Copyright © 2017-2025 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru
+Copyright © 2017-2026 Eduard Sesigin. All rights reserved. Contacts: claygod@yandex.ru
